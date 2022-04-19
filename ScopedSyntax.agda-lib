@@ -1,0 +1,7 @@
+name: ScopedSyntax
+include: 
+  src
+depend:
+  Embellishment
+flags:
+  --auto-inline -v print:10 -v meta:10
