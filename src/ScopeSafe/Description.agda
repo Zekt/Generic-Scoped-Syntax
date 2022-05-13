@@ -12,6 +12,8 @@ open import Generics.RecursionScheme
 private variable
   A B S I : Set ℓ
   Γ Δ Θ : List I
+  i : I
+  cb : D.ConB
 
 infixr 10 _⇒_
 
@@ -31,6 +33,14 @@ data Var {I : Set ℓ} : I -Scoped where
   z : ∀ {σ : I}   → ∀[ (σ ∷_) ⊢ Var σ ]
   s : ∀ {σ τ : I} → ∀[ Var σ ⇒ (τ ∷_) ⊢ Var σ ]
 
+weakenVarL : Var i Γ → Var i (Δ <> Γ)
+weakenVarL {Δ = []} V = V
+weakenVarL {Δ = x ∷ Δ} V = s (weakenVarL V)
+
+weakenVarR : Var i Γ → Var i (Γ <> Δ)
+weakenVarR z = z
+weakenVarR (s V) = s (weakenVarR V)
+
 data Type : Set where
   α    : Type
   _‵→_ : Type → Type → Type
@@ -38,22 +48,29 @@ data Type : Set where
 private variable
   σ τ : Type
   W V C : I -Scoped
-  i : I
 
 data Lam : Type → List Type → Set where
   ‵var : Var σ Γ        → Lam σ Γ
   ‵app : ∀ {Γ σ τ} → Lam (σ ‵→ τ) Γ → Lam σ Γ → Lam τ Γ
   ‵lam : ∀ {Γ σ τ} → Lam τ (σ ∷ Γ)  → Lam (σ ‵→ τ) Γ
 
-data Desc' (I : Set ℓ) : Setω where
-  `σ : (A : Set ℓ) → (A → Desc' I) → Desc' I
-  `X : List I → I → Desc' I → Desc' I
-  `▪ : I → Desc' I
-
-⟦_⟧ : Desc' I → (List I → I -Scoped) → I -Scoped
-⟦ `σ A d   ⟧ X i Γ =  Σ[ a ∈ A ] ⟦ d a ⟧ X i Γ
-⟦ `X Δ j d ⟧ X i Γ = X Δ j Γ × ⟦ d ⟧ X i Γ
-⟦ `▪ j     ⟧ X i Γ = i ≡ j
+--Indexˢ : Set ℓ → Set ℓ
+--Indexˢ Ty = Ty × List Ty × ⊤
+--
+--data Desc' (I : Set ℓ) : D.ConB → Setω where
+--  `σ : (A : Set ℓ) → (A → Desc' I cb) → Desc' I (inl ℓ ∷ cb)
+--  `X : List I → I → Desc' I cb → Desc' I (inr [] ∷ cb)
+--  `▪ : I → Desc' I []
+--
+--fromDesc' : (Desc' I cb) → List I → D.ConD (Indexˢ I) cb
+--fromDesc' (`σ A D')   Δ = D.σ A λ a → fromDesc' (D' a) Δ
+--fromDesc' (`X Γ i D') Δ = D.ρ (D.ι (i , Γ <> Δ , tt)) (fromDesc' D' Δ)
+--fromDesc' (`▪ i)      Δ = D.ι (i , Δ , tt)
+--
+--⟦_⟧ : Desc' I cb → (List I → I -Scoped) → I -Scoped
+--⟦ `σ A d   ⟧ X i Γ =  Σ[ a ∈ A ] ⟦ d a ⟧ X i Γ
+--⟦ `X Δ j d ⟧ X i Γ = X Δ j Γ × ⟦ d ⟧ X i Γ
+--⟦ `▪ j     ⟧ X i Γ = i ≡ j
 
 instance
   LamC : Named (quote Lam) _

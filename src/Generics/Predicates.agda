@@ -19,6 +19,21 @@ private variable
 Indexˢ : Set ℓ → Set ℓ
 Indexˢ Ty = Ty × List Ty × ⊤
 
+data Desc' (I : Set ℓ) : ConB → Setω where
+  `σ : (A : Set ℓ) → (A → Desc' I cb) → Desc' I (inl ℓ ∷ cb)
+  `X : List I → I → Desc' I cb → Desc' I (inr [] ∷ cb)
+  `▪ : I → Desc' I []
+
+fromDesc' : (Desc' I cb) → List I → ConD (Indexˢ I) cb
+fromDesc' (`σ A D')   Δ = σ A λ a → fromDesc' (D' a) Δ
+fromDesc' (`X Γ i D') Δ = ρ (ι (i , Γ <> Δ , tt)) (fromDesc' D' Δ)
+fromDesc' (`▪ i)      Δ = ι (i , Δ , tt)
+
+⟦_⟧ : Desc' I cb → (List I → I -Scoped) → I -Scoped
+⟦ `σ A d   ⟧ X i Γ =  Σ[ a ∈ A ] ⟦ d a ⟧ X i Γ
+⟦ `X Δ j d ⟧ X i Γ = X Δ j Γ × ⟦ d ⟧ X i Γ
+⟦ `▪ j     ⟧ X i Γ = i ≡ j
+
 Syntaxⁱ : Set ℓ → (⊤ → Tel ℓ') → Setω
 Syntaxⁱ {ℓ} {ℓ'} Ty tel = Σω (ℓ ≡ ℓ') λ {refl → tel ≡ω λ _ → [ _ ∶ Ty ] [ _ ∶ List Ty ] []}
 
@@ -44,7 +59,9 @@ Syntaxᶜˢ {ℓ = ℓ} {cbs = cb ∷ cbs} {Ty = Ty} (D ∷ Ds) =
    Σω[ cb' ∈ ConB ]
   Σωω[ D' ∈ (List Ty → ConD (Indexˢ Ty) cb') ]
   Σωω ((cb ,ω D) ≡ω (((inl ℓ ∷ cb') ,ω σ (List Ty) D') ⦂ω Σω ConB (ConD (Indexˢ Ty))))
-      λ {refl → (∀ Δ → Syntaxᶜ (D' Δ) Δ) ×ωω Syntaxᶜˢ Ds}
+      λ {refl → Σωω[ D'' ∈ Desc' Ty cb' ]
+                  (∀ Δ → (fromDesc' D'' Δ) ≡ω D' Δ) ×ωω
+                  Syntaxᶜˢ Ds}
 
 Syntaxᶜˢ' : Set ℓ → ConDs (Indexˢ Ty) (cb ∷ cbs) → Setω
 Syntaxᶜˢ' {ℓ = ℓ} {cb = cb} I (D ∷ Ds) =
@@ -91,7 +108,7 @@ Syntax {ℓ} Ty PD =
                     Σωω[ D   ∈ ConD X cb ]
                       ConDs X cbs
     Scoped : Setω
-    Scoped = Σω (plevel ≡ lzero) (λ {refl →
+    Scoped = Σω ((alevel , plevel) ≡ (lzero , lzero)) (λ {refl →
                 Σωω (Param ≡ω []) (λ {refl →
                   Syntaxⁱ {ℓ} {ilevel} Ty (Index)
                 })
@@ -111,10 +128,10 @@ Syntaxᵈ Ty D = Σω (DataD.#levels D ≡ 0) λ _ →
                Σωω (DataD.applyL D ≡ω λ _ → PD)
                   λ {refl → Syntax Ty PD}
 
-toDescᶜ : (D : ConD (Indexˢ I) cb) → Syntaxᶜ D Γ → Desc' I
-toDescᶜ (ι (t , ts , tt)) (lift refl) = `▪ t
-toDescᶜ (σ A D) (refl ,ω Sy) = `σ (Lift _ A) λ {(lift a) → toDescᶜ (D a) (Sy a)}
-toDescᶜ (ρ (ι (i , _ , tt)) D) (lift (is_ , refl) ,ωω prfᶜ) = `X is_ i (toDescᶜ D prfᶜ)
+--toDescᶜ : (D : ConD (Indexˢ I) cb) → Syntaxᶜ D Γ → Desc' I
+--toDescᶜ (ι (t , ts , tt)) (lift refl) = `▪ t
+--toDescᶜ (σ A D) (refl ,ω Sy) = `σ (Lift _ A) λ {(lift a) → toDescᶜ (D a) (Sy a)}
+--toDescᶜ (ρ (ι (i , _ , tt)) D) (lift (is_ , refl) ,ωω prfᶜ) = `X is_ i (toDescᶜ D prfᶜ)
 
 -- Fin can be used here
 open import Prelude.Fin
