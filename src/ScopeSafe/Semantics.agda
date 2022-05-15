@@ -232,9 +232,7 @@ toSyntaxᶜ : ∀ {D' : Desc' Type cb}
 toSyntaxᶜ {D' = `σ A x}    refl inj (a , ⟦D⟧) = a , toSyntaxᶜ refl inj ⟦D⟧
 toSyntaxᶜ {D' = `X [] _ _} refl inj (K , ⟦D⟧) = K , toSyntaxᶜ refl inj ⟦D⟧
 toSyntaxᶜ {Γ = Γ} {D' = `X (x ∷ Δ) _ _} refl inj (K , ⟦D⟧) =
-  K (bifmap {Δ = Δ} {Γ = Γ}              weakenVarL  (pack id))
-    (bifmap {Δ = Γ} {Γ = (x ∷ Δ)} (inj ∘ weakenVarR) (pack id))
-  , toSyntaxᶜ refl inj ⟦D⟧
+  K (pack weakenVarL) (pack (inj ∘ weakenVarR)) , toSyntaxᶜ refl inj ⟦D⟧
 toSyntaxᶜ {D' = `▪ x} refl inj refl = refl
 
 toSyntax : ∀ {Ds : ConDs (Indexˢ Type) cbs}
@@ -332,3 +330,27 @@ SubstP = SemP (findDataC (quote Lam)) SyntaxLam SubstLamSem
 unquoteDecl sub = defineFold SubstP sub
 
 SubstC = genFoldC SubstP sub
+
+testTerm : Lam α (α ∷ (α ‵→ α) ∷ [])
+testTerm = ‵app (‵var (s z))
+                (‵app (‵lam (‵var (s z)))
+                      (‵app (‵lam (‵var z))
+                            (‵var z)))
+
+testSub : ((α ∷ (α ‵→ α) ∷ []) -Env) Lam (α ∷ (α ‵→ α) ∷ (α ‵→ (α ‵→ α)) ∷ [])
+lookup testSub    z  = ‵app (‵var (s z))
+                            (‵var z)
+lookup testSub (s z) = ‵app (‵var (s (s z)))
+                            (‵var z)
+
+test : Lam α (α ∷ (α ‵→ α) ∷ (α ‵→ (α ‵→ α)) ∷ [])
+test = sub testTerm _ testSub
+
+testEq : test ≡ ‵app (‵app (‵var (s (s z)))
+                           (‵var z))
+                     (‵app (‵lam (‵app (‵var (s (s z)))
+                                       (‵var (s z))))
+                           (‵app (‵lam (‵var z))
+                                 (‵app (‵var (s z))
+                                       (‵var z))))
+testEq = refl
