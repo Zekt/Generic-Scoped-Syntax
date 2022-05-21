@@ -337,6 +337,9 @@
 \RequirePackage{amsfonts}
 
 \renewcommand{\ttdefault}{\sfdefault}
+\usepackage{newverbs}
+\renewcommand{\verb}{\collectverb{\color{AgdaFunction}}}
+\newcommand{\con}{\collectverb{\color{AgdaInductiveConstructor}}}
 \providecommand\mathbbm{\mathbb}
 
 % TODO: Define more of these ...
@@ -509,7 +512,7 @@ Such syntax operations and proofs are reified as native functions on native data
 
 \section{Recap}
 We take a glimpse on how syntax-generic programs are defined on Allais universe of syntaxes \verb|Desc| (fig ...).
-A \verb|σ| describes any branching of the construction by a dependent sigma type, a \verb|π| describes an occurrence of recursion of the syntax being defined by taking its index, and a \verb|■| ends a description with the index of the constructed syntax.
+A \con|σ| describes any branching of the construction by a dependent sigma type, a \con|π| describes an occurrence of recursion of the syntax being defined by taking its index, and a \con|■| ends a description with the index of the constructed syntax.
 The interpretation function \verb|⟦_⟧| determines what a description actually means, i.e. what is needed to construct a syntax given a description.
 Then we can take the fixed points \verb|Tm| (fig..) on which generic programs will operate.
 
@@ -526,29 +529,28 @@ In the next section, we show how we redefine these structures on Ko universe of 
 \verb|Desc| is used strictly for representing syntaxes, we will need a predicate on the universe of datatypes to get an equivalent subset.
 \verb|ConDs| (fig...) covers the representation for datatype constructors, each of which is described by a \verb|ConD|.
 A \verb|ConD| describes a single constructor as close to a Agda datatype constructor as possible.
-A \verb|σ| describes a field of of the constructor with shallow embedding that takes any \verb|Set|, a \verb|ρ| combined with \verb|RecD| describes a possibly higher-order recursion, a \verb|ι| ends a description with the index of the constructed datatype.
+A \con|σ| describes a field of of the constructor with shallow embedding that takes any \verb|Set|, a \con|ρ| combined with \verb|RecD| describes a possibly higher-order recursion, a \con|ι| ends a description with the index of the constructed datatype.
 Notice the similarities and dissimilarities between \verb|Desc| and \verb|ConDs|, the latter is the gap which our predicates should fill in. 
 
 The description of datatypes as whole, which is a larger structure containing \verb|ConDs| along with levels, parameters, and indices is omitted here.
-Constraints on \verb|ConDs| are enough for illustration purposes.
+Constraints on \verb|ConD| are enough for illustration purposes.
 
-\verb|Syntaxc| is what a predicate on \verb|ConDs| looks like.
+\verb|Syntaxc| is what a predicate on \verb|ConD| looks like.
 We assume the index of the given description is a product of \verb|I| and \verb|List I|, which should have been enforced by another predicate on the index.
 We look at the definition of \verb|⟦_⟧| to know how to constrain our datatypes.
 Take the case of the predicate \verb|Syntaxʳ| on datatype recursion \verb|RecD|.
-The \verb|ι| case of the predicate enforces that the list in the index of the constructed type, i.e. the context of the constructed syntax, should be a concatenation of two list, one of which is universally quantified.
-The \verb|π| case forbids higher order recursion.
+The \con|ι| case of the predicate enforces that the list in the index of the constructed type, i.e. the context of the constructed syntax, should be a concatenation of two list, one of which is universally quantified.
+The \con|π| case forbids higher order recursion.
 This fills in the gap that universally quantified contexts do not appear in \verb|Desc|, but are simply assumed at interpretation, as well as the fact that \verb|Desc| does not allow higher-order recursions.
 
 We proceed to redefine the interpretation function and \verb|Semantics| on Ko.. universe of datatypes constrained by the \verb|Syntax| predicate.
 
 We observe that \verb|semantics| constructs fold operations.
 Ko.. have provided us with a representation for generic fold operations, along with metaprograms that reify them to native functions.
-We as generic programmers define these connections to replace \verb|semantics|, and turn the power of instantiation to the hands of DSL programmers.
+We as generic programmers define these connections to replace \verb|semantics|, and place the power of instantiation in the hands of DSL programmers.
 
 
 \section{Examples and demonstration}
-
 
 \section{Discussion}
 %%
