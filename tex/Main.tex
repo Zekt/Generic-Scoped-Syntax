@@ -1,4 +1,5 @@
 \documentclass[sigplan,review,fleqn]{acmart}
+\usepackage{../src/latex/agda}
 
 %% Rights management information.  This information is sent to you
 %% when you complete the rights form.  These commands have SAMPLE
@@ -335,6 +336,7 @@
 \RequirePackage{ucs}
 \RequirePackage{amsfonts}
 
+\renewcommand{\ttdefault}{\sfdefault}
 \providecommand\mathbbm{\mathbb}
 
 % TODO: Define more of these ...
@@ -345,6 +347,8 @@
 \DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{\scriptscriptstyle ?}{=}}}
 \DeclareUnicodeCharacter{10214}{\ensuremath{\llbracket}}
 \DeclareUnicodeCharacter{10215}{\ensuremath{\rrbracket}}
+\DeclareUnicodeCharacter{9632}{\ensuremath{\mathnormal\blacksquare}}
+\DeclareUnicodeCharacter{7580}{\textsuperscript{c}}
 
 % TODO: This is in general not a good idea.
 \providecommand\textepsilon{$\epsilon$}
@@ -374,8 +378,6 @@
 
 
 
-
-
 %%format ` = "{}^\backprime"
 %%format `Set = ` Set
 %%format `[] = ` []
@@ -399,7 +401,7 @@
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{Generic Syntax Operations, Reflectedly Reified}
+\title{Generic Syntax Operations, Reflectedly Reified (Extended Abstract)}
 
 %% the authors and their affiliations.
 %% Of note is the shared affiliation of the first two authors, and the
@@ -427,16 +429,16 @@
 	\postcode{115201}
 }
 
-\author{Liang-Ting Chen}
-\email{liang.ting.chen.tw@gmail.com}
-\orcid{0000-0002-3250-1331}
-\affiliation{%
-	\institution{Institute of Information Science, Academia Sinica}
-	\streetaddress{128 Academia Road, Section 2, Nankang}
-	\city{Taipei}
-	\country{Taiwan}
-	\postcode{115201}
-}
+%\author{Liang-Ting Chen}
+%\email{liang.ting.chen.tw@gmail.com}
+%\orcid{0000-0002-3250-1331}
+%\affiliation{%
+%	\institution{Institute of Information Science, Academia Sinica}
+%	\streetaddress{128 Academia Road, Section 2, Nankang}
+%	\city{Taipei}
+%	\country{Taiwan}
+%	\postcode{115201}
+%}
 
 %%
 %% By default, the full list of authors will be used in the page
@@ -478,24 +480,77 @@
 
 \section{Introduction}
 \label{sec:introduction}
-Programmers of embedded Domain Specific Languages (DSLs) (...) make use of the host languages' type systems to enforce properties of the syntaxes, and to define scope-safe operations (e.g. renaming, capture-avoid substitution and printing).
+Programmers of embedded Domain Specific Languages (DSLs) (...) make use of the host languages' type systems to enforce properties of the syntaxes, and to define scope-safe operations (e.g. renaming, capture-avoid substitution, and printing).
 DSLs written in this manner share similar types, operations, and lemmas.
 Traditionally, programmers need to redefine the operations for every distinct syntax.
 There have been proposals of universes of syntaxes and corresponding definitions of generic programs (...), but they are not widely adapted.
+
 Ko... have tackled similar problems in datatype-generic programming.
 They argue that current generic programs either suffer from lack of interoperability or inefficiency.
 Programmers who are in need of an universe of syntaxes would typically design one specifically for their intended usage, making it hard to carry a definition in an universe to the others.
 Also instantiated operations defined on least fixed points of endofunctors differ greatly in semblance and efficiency from their native counterparts.
 Existing syntaxes and operations need to be redefined for a specific universe in order to be interoperable.
 Thus they provide an universe of datatypes of the host language (in their case, Agda), as well as the translations between instantiated generic programs and native ones via elaborator reflection (...).
-We observe that syntax-generic programs are typically datatype-generic programs as well, in the sense that syntaxes are typically defined as datatypes.
+
+We observe that syntax-generic programs can be treated as special cases of datatype-generic programs, in the sense that syntaxes are typically defined as datatypes.
 Therefore similar approaches are applicable.
-In this extended abstract, we describe how we 1. relate the universe of syntaxes proposed by Allais(...) to the universe of datatypes proposed by Ko(...), 2. redefine Allais(...) syntax-generic programs to generic programs on a subset of Ko(...) universe of datatypes, 3. argue them to be equivalent in expressiveness, and 4. give some examples.
-The universe we work on covers simply-typed lambda calculus. \todo{Does it?}
+In this extended abstract, we describe how we
+1. relate the universe of syntaxes proposed by Allais(...) to the universe of datatypes proposed by Ko(...),
+2. redefine Allais(...) syntax-generic programs to generic programs on a subset of Ko(...) universe of datatypes,
+3. argue them to be equivalent in expressiveness, and
+4. give some examples.
+
+The universe we work on covers simply-typed languages with binders. \todo{Does it?}
 We see it as a demonstration of techniques that make DSL programmers and generic programmers' lives easier.
-Syntax-generic programmers can choose an arbitrary universe of syntax as long as it is proved to be part of the datatype universe.
+Syntax-generic programmers can choose an arbitrary universe of syntax as long as it is proved to be a subset of the datatype universe.
 DSL programmers get to work on familiar native syntaxes, once they provide the proof of them belonging to some universes of syntaxes, generic operations defined on these universes can be instantiated via elaborator reflection.
 Such syntax operations and proofs are reified as native functions on native datatypes, making them interoperable with existing libraries.
+\todo{Why do we have to redefine on this universe?}
+
+\section{Recap}
+We take a glimpse on how syntax-generic programs are defined on Allais universe of syntaxes \verb|Desc| (fig ...).
+A \verb|σ| describes any branching of the construction by a dependent sigma type, a \verb|π| describes an occurrence of recursion of the syntax being defined by taking its index, and a \verb|■| ends a description with the index of the constructed syntax.
+The interpretation function \verb|⟦_⟧| determines what a description actually means, i.e. what is needed to construct a syntax given a description.
+Then we can take the fixed points \verb|Tm| (fig..) on which generic programs will operate.
+
+Allais... show that a subset of generic programs of term traversal can be described by a record \verb|Semantics| (fig...).
+\verb|Semantics| is parametrised by a description and families \verb|V| and \verb|C| of type \verb|I -> List I -> Set|.
+\verb|V| is the family of values that replaces bound variables during the traversal, and \verb|C| is the family of what is computed from the traversal.
+The actual term traversal function can be derived from a given \verb|Semantics| via the function \verb|semantics|.
+For example, the generic \verb|Semantics| of renaming can be defined with \verb|Var| (fig...) being values replacing bound variables and \verb|Tm d| being the computed result.
+
+In the next section, we show how we redefine these structures on Ko universe of datatypes. 
+
+
+\section{Translation to universe of datatypes}
+\verb|Desc| is used strictly for representing syntaxes, we will need a predicate on the universe of datatypes to get an equivalent subset.
+\verb|ConDs| (fig...) covers the representation for datatype constructors, each of which is described by a \verb|ConD|.
+A \verb|ConD| describes a single constructor as close to a Agda datatype constructor as possible.
+A \verb|σ| describes a field of of the constructor with shallow embedding that takes any \verb|Set|, a \verb|ρ| combined with \verb|RecD| describes a possibly higher-order recursion, a \verb|ι| ends a description with the index of the constructed datatype.
+Notice the similarities and dissimilarities between \verb|Desc| and \verb|ConDs|, the latter is the gap which our predicates should fill in. 
+
+The description of datatypes as whole, which is a larger structure containing \verb|ConDs| along with levels, parameters, and indices is omitted here.
+Constraints on \verb|ConDs| are enough for illustration purposes.
+
+\verb|Syntaxc| is what a predicate on \verb|ConDs| looks like.
+We assume the index of the given description is a product of \verb|I| and \verb|List I|, which should have been enforced by another predicate on the index.
+We look at the definition of \verb|⟦_⟧| to know how to constrain our datatypes.
+Take the case of the predicate \verb|Syntaxʳ| on datatype recursion \verb|RecD|.
+The \verb|ι| case of the predicate enforces that the list in the index of the constructed type, i.e. the context of the constructed syntax, should be a concatenation of two list, one of which is universally quantified.
+The \verb|π| case forbids higher order recursion.
+This fills in the gap that universally quantified contexts do not appear in \verb|Desc|, but are simply assumed at interpretation, as well as the fact that \verb|Desc| does not allow higher-order recursions.
+
+We proceed to redefine the interpretation function and \verb|Semantics| on Ko.. universe of datatypes constrained by the \verb|Syntax| predicate.
+
+We observe that \verb|semantics| constructs fold operations.
+Ko.. have provided us with a representation for generic fold operations, along with metaprograms that reify them to native functions.
+We as generic programmers define these connections to replace \verb|semantics|, and turn the power of instantiation to the hands of DSL programmers.
+
+
+\section{Examples and demonstration}
+
+
+\section{Discussion}
 %%
 %% The acknowledgments section is defined using the "acks" environment
 %% (and NOT an unnumbered section). This ensures the proper
@@ -504,6 +559,603 @@ Such syntax operations and proofs are reified as native functions on native data
 \begin{acks}
 The work is supported by the \grantsponsor{MOST}{Ministry of Science and Technology of Taiwan}{https://www.most.gov.tw/} under grant \grantnum{MOST}{MOST 109-2222-E-001-002-MY3}.
 \end{acks}
+
+\begin{code}%
+	\>[0]\AgdaSymbol{\{-\#}\AgdaSpace{}%
+	\AgdaKeyword{OPTIONS}\AgdaSpace{}%
+	\AgdaPragma{--warning=ignore}\AgdaSpace{}%
+	\AgdaSymbol{\#-\}}\<%
+	\\
+	\>[0]\AgdaKeyword{open}\AgdaSpace{}%
+	\AgdaKeyword{import}\AgdaSpace{}%
+	\AgdaModule{Prelude}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set₁}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{σ}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{π}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{■}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧}}%
+	\>[40I]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{∀}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{I}\AgdaSymbol{\}}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	\>[.][@{}l@{}]\<[40I]%
+	\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\<%
+	\\
+	%
+	\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\<%
+	\\
+	\>[0]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+	\AgdaInductiveConstructor{σ}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaBound{D}%
+	\>[10]\AgdaOperator{\AgdaFunction{⟧}}\AgdaSpace{}%
+	\AgdaBound{X}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaFunction{Σ[}\AgdaSpace{}%
+	\AgdaBound{a}\AgdaSpace{}%
+	\AgdaFunction{∈}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaFunction{]}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+	\AgdaBound{D}\AgdaSpace{}%
+	\AgdaBound{a}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{⟧}}\AgdaSpace{}%
+	\AgdaBound{X}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{Γ}\<%
+	\\
+	\>[0]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+	\AgdaInductiveConstructor{π}\AgdaSpace{}%
+	\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaBound{j}\AgdaSpace{}%
+	\AgdaBound{D}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{⟧}}\AgdaSpace{}%
+	\AgdaBound{X}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaBound{X}\AgdaSpace{}%
+	\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaBound{j}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{×}}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+	\AgdaBound{D}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{⟧}}\AgdaSpace{}%
+	\AgdaBound{X}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{Γ}\<%
+	\\
+	\>[0]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+	\AgdaInductiveConstructor{■}\AgdaSpace{}%
+	\AgdaBound{j}%
+	\>[10]\AgdaOperator{\AgdaFunction{⟧}}\AgdaSpace{}%
+	\AgdaBound{X}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaOperator{\AgdaDatatype{≡}}\AgdaSpace{}%
+	\AgdaBound{j}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{variable}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\<%
+	\\
+	%
+	\>[2]\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\<%
+	\\
+	%
+	\>[2]\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\<%
+	\\
+	%
+	\>[2]\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{d}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{record}\AgdaSpace{}%
+	\AgdaRecord{Semantics}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{d}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{V}\AgdaSpace{}%
+	\AgdaBound{C}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{postulate}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaPostulate{semantics}%
+	\>[159I]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{∀}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{V}\AgdaSpace{}%
+	\AgdaBound{C}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{\}}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{d}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Desc}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSymbol{\}}\<%
+	\\
+	\>[.][@{}l@{}]\<[159I]%
+	\>[12]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaRecord{Semantics}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{V}\AgdaSpace{}%
+	\AgdaBound{C}\<%
+	\\
+	%
+	\>[12]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaBound{V}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(∀}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{σ}\AgdaSymbol{\}}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaBound{C}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	%
+	\>[2]\AgdaPostulate{Ren}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaRecord{Semantics}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSymbol{)}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	%
+	\>[2]\AgdaPostulate{Sub}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaRecord{Semantics}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSymbol{)}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaFunction{ren}%
+	\>[210I]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{∀}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSymbol{\}}\<%
+	\\
+	\>[.][@{}l@{}]\<[210I]%
+	\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
+	\\
+	%
+	\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\<%
+	\\
+	\>[0]\AgdaFunction{ren}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaBound{t}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaPostulate{semantics}\AgdaSpace{}%
+	\AgdaPostulate{Ren}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaBound{t}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaFunction{sub}%
+	\>[237I]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{∀}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSymbol{\}}\<%
+	\\
+	\>[.][@{}l@{}]\<[237I]%
+	\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
+	\\
+	%
+	\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\<%
+	\\
+	\>[0]\AgdaFunction{sub}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaBound{t}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaPostulate{semantics}\AgdaSpace{}%
+	\AgdaPostulate{Sub}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaBound{t}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{RecD}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set₁}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{ι}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{RecD}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{π}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{RecD}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{RecD}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set₁}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{ι}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{σ}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{ρ}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{RecD}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{E}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{ConDs}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{I}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set₁}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{[]}%
+	\>[6]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{ConDs}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\>[2]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}∷\AgdaUnderscore{}}}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{Ds}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{ConDs}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{ConDs}\AgdaSpace{}%
+	\AgdaBound{I}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaFunction{Syntaxʳ}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{RecD}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{×}}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\<%
+	\\
+	\>[0]\AgdaFunction{Syntaxʳ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{ι}\AgdaSpace{}%
+	\AgdaSymbol{(\AgdaUnderscore{}}\AgdaSpace{}%
+	\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSymbol{))}\AgdaSpace{}%
+	\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaFunction{Σ[}\AgdaSpace{}%
+	\AgdaBound{Δ'}\AgdaSpace{}%
+	\AgdaFunction{∈}\AgdaSpace{}%
+	\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+	\AgdaFunction{]}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaDatatype{≡}}\AgdaSpace{}%
+	\AgdaBound{Δ'}\AgdaSpace{}%
+	\AgdaOperator{\AgdaField{<>}}\AgdaSpace{}%
+	\AgdaBound{Δ}\<%
+	\\
+	\>[0]\AgdaFunction{Syntaxʳ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{π}\AgdaSpace{}%
+	\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+	\AgdaSymbol{\AgdaUnderscore{})}%
+	\>[20]\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaDatatype{⊥}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaFunction{Syntaxᶜ}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{ConD}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{×}}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaGeneralizable{I}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\<%
+	\\
+	\>[0]\AgdaFunction{Syntaxᶜ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{ι}\AgdaSpace{}%
+	\AgdaSymbol{(\AgdaUnderscore{}}\AgdaSpace{}%
+	\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSymbol{))}\AgdaSpace{}%
+	\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaDatatype{≡}}\AgdaSpace{}%
+	\AgdaBound{Δ}\<%
+	\\
+	\>[0]\AgdaFunction{Syntaxᶜ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{σ}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaBound{D}\AgdaSymbol{)}%
+	\>[20]\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{a}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaFunction{Syntaxᶜ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
+	\AgdaBound{a}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaBound{Δ}\<%
+	\\
+	\>[0]\AgdaFunction{Syntaxᶜ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{ρ}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaBound{D}\AgdaSymbol{)}%
+	\>[20]\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaFunction{Syntaxʳ}\AgdaSpace{}%
+	\AgdaBound{A}\AgdaSpace{}%
+	\AgdaBound{Δ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaFunction{×}}\AgdaSpace{}%
+	\AgdaFunction{Syntaxᶜ}\AgdaSpace{}%
+	\AgdaBound{D}\AgdaSpace{}%
+	\AgdaBound{Δ}\<%
+	\\
+\end{code}
 
 %%
 %% The next two lines define the bibliography style to be used, and
