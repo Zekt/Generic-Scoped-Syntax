@@ -489,18 +489,18 @@ DSLs written in this manner share similar types, operations, and lemmas.
 Traditionally, programmers need to redefine the operations for every distinct syntax.
 There have been proposals of universes of syntaxes and corresponding definitions of generic programs (...), but they are not widely adapted.
 
-Ko... have tackled similar problems in datatype-generic programming.
+Ko et al.[] have tackled similar problems in datatype-generic programming.
 They argue that current generic programs either suffer from lack of interoperability or inefficiency.
 Programmers who are in need of an universe of syntaxes would typically design one specifically for their intended usage, making it hard to carry a definition in an universe to the others.
 Also instantiated operations defined on least fixed points of endofunctors differ greatly in semblance and efficiency from their native counterparts.
 Existing syntaxes and operations need to be redefined for a specific universe in order to be interoperable.
-Thus they provide an universe of datatypes of the host language (in their case, Agda), as well as the translations between instantiated generic programs and native ones via elaborator reflection (...).
+Thus Ko et al. provide an universe of datatypes of the host language (in their case, Agda), as well as the translations between instantiated generic programs and native ones via elaborator reflection (...).
 
 We observe that syntax-generic programs can be treated as special cases of datatype-generic programs, in the sense that syntaxes are typically defined as datatypes.
 Therefore similar approaches are applicable.
 In this extended abstract, we describe how we
-1. relate the universe of syntaxes proposed by Allais(...) to the universe of datatypes proposed by Ko(...),
-2. redefine Allais(...) syntax-generic programs to generic programs on a subset of Ko(...) universe of datatypes,
+1. relate the universe of syntaxes proposed by Allais et al. to the universe of datatypes proposed by Ko et al.,
+2. redefine syntax-generic programs from Allais et al. to generic programs on a subset of the datatype universe from Ko et al.,
 3. argue them to be equivalent in expressiveness, and
 4. give some examples.
 
@@ -512,21 +512,52 @@ Such syntax operations and proofs are reified as native functions on native data
 \todo{Why do we have to redefine on this universe?}
 
 \section{Recap}
-We take a glimpse on how syntax-generic programs are defined on Allais universe of syntaxes \verb|Desc| (fig ...).
+We take a glimpse of syntax-generic programs on the universe of syntaxes \verb|Desc| (fig ...) defined by Allais et al.
 A \con|σ| describes any branching of the construction by a dependent sigma type, a \con|X| describes an occurrence of recursion of the syntax being defined by taking its index, and a \con|■| ends a description with the index of the constructed syntax.
 The interpretation function \verb|⟦_⟧| determines what a description actually means, i.e. what is needed to construct a syntax given a description.
 Then we can take the fixed points \verb|Tm| (fig..) on which generic programs will operate.
 
-Allais... show that a subset of generic programs of term traversal can be described by a record \verb|Semantics| (fig...).
+Allais et al. show that a subset of generic programs of term traversal can be described by a record \verb|Semantics| (fig...).
 \verb|Semantics| is parametrised by a description and families \name|V| and \name|C| of type \name|I → |\verb|List|\name| I → |\verb|Set|.
 \name|V| is the family of values that replaces bound variables during the traversal, and \name|C| is the family of what is computed from the traversal.
 The actual term traversal function can be derived from a given \verb|Semantics| via the function \verb|semantics|.
-For example, the generic \verb|Semantics| of renaming can be defined with \verb|Var| (fig...) being values replacing bound variables and \verb|Tm|\name| d| being the computed result.
 
-In the next section, we show how we redefine these structures on Ko universe of datatypes. 
+For example, a syntax of simply-typed lambda calculus can be defined in this universe as \verb|STLC| in fig.
+The generic \verb|Semantics| of renaming \verb|Ren| (fig..) can be defined with \verb|Var| (fig...) being values replacing bound variables and \verb|Tm|\name| d| being the computed result.
 
+To acquire the \verb|rename| (fig...) function, one simply applies \verb|semantics| to \verb|Ren|.
+\verb|rename| is polymorphic so it is directly applicable to terms of \verb|STLC|, as the fixed point \verb|Tm|\name| d| will be instantiated to \verb|Tm STLC|. 
+
+
+\section{Demonstration}
+We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
+Take a DSL programmer who want to work on the datatype of syntax \verb|Lam| (fig..) for example.
+Traditionally, they would manually define a \verb|rename| function, as well as other syntax operations such as substitution, printer, and scope checker.
+We show that these operations can be generated at once and the programmers will not need to redefine them for every new syntax.
+They only needs to provide a proof \verb|Syntax|\name| D| that says \name|D| satisfies what is required for a datatype to be a syntax, where \name|D| is the datatype description of \verb|Lam|. 
+Ko et al. have provided a macro \macro|genDataD| that generates from a native datatype its description of type \verb|DataD|.
+This means that the programmer needs to have a basic understanding of \verb|DataD|.
+\verb|DataD| is closely resemble to native datatype definition in Agda.
+More specifically, the core part of \verb|DataD|, \verb|ConDs| is a list in which each \verb|ConD| represents a constructor.
+
+Now the programmer get to choose whatever generic syntax operation they want to instantiate.
+For example, our library provides a function \verb|Renaming| that generates a \verb|Semantics| from a \name|D : |\verb|DataD| and its \verb|Syntax|\name| D|. 
+We also provide a function \verb|SemP| that takes a datatype description, its proof of being syntax, and the \verb|Semantics| we just generated, then generates an instance of \verb|FoldP|.
+\verb|FoldP| and the macro \macro|defineFold| are given by Ko et al., the former is the description of generic fold operations, and the latter instantiate them to native fold functions.
+
+The steps described can be summarized by fig.... 
+The programmer need not understand the details of the structures we just mentioned, except the datatype description \verb|DataD| and the \verb|Syntax| predicate they need to provide.
+With the help of these utilities, we have shown that a DSL programmer only needs to prove their datatypes to be syntaxes to acquire instantiation of generic renaming, as well as other term traversal operations.
+Delightfully they will find these operations are reified as native functions, close to what they would have written for the syntaxes they just defined.
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=\textwidth]{Diagram}
+\end{figure*}
 
 \section{Translation to universe of datatypes}
+We show how we redefine these structures on the universe of datatypes from Ko et al.
+
 \verb|Desc| is used strictly for representing syntaxes, we will need a predicate on the universe of datatypes to get an equivalent subset.
 \verb|ConDs| (fig...) covers the representation for datatype constructors, each of which is described by a \verb|ConD|.
 A \verb|ConD| describes a single constructor as close to a Agda datatype constructor as possible.
@@ -550,26 +581,6 @@ We observe that \verb|semantics| constructs fold operations.
 Ko.. have provided us with a representation for generic fold operations, along with metaprograms that reify them to native functions.
 We as generic programmers define these connections to replace \verb|semantics|, and place the power of instantiation in the hands of DSL programmers.
 
-\section{Example and demonstration}
-We describe what a DSL programmer would typically program, then illustrate how they interact with our library and metaprograms provided by Ko et al. to exploit generic syntax operations.
-
-Take a DSL programmer who want to work on the datatype of syntax \verb|Lam| for example.
-Traditionally, they would manually define a \verb|rename| function, as well as other syntax operations such as substitution, printer, and sugaring/desugaring.
-Instead of redefining them for every new syntax, in our scenario, they only needs to provide a proof \verb|Syntax|\name| D| that says \name|D| satisfies what is required for a datatype to be a syntax, where \name|D| is the datatype description of \verb|Lam|. 
-Ko et al. have provided a macro \macro|genDataD| that generates from a native datatype its description of type \verb|DataD|.
-Now the programmer get to choose whatever generic syntax operation they want to instantiate.
-For example, our library provides a function \verb|Renaming| that generates a \verb|Semantics| from a \name|D : |\verb|DataD| and its \verb|Syntax|\name| D|. 
-We also provide a function \verb|SemP| that takes a datatype description, its proof of being syntax, and the \verb|Semantics| we just generated, then generates an instance of \verb|FoldP|.
-\verb|FoldP| and macro \macro|defineFold| are given by Ko et al., the former is the description of generic fold operations, and the latter instantiate them to native fold functions.
-
-The steps described can be summarized by fig....
-With the help of these utilities, we have shown that a DSL programmer only needs to prove their datatypes to be syntaxes to acquire instantiation of generic renaming, as well as other term traversal operations.
-Delightfully they will find these operations are reified as native functions, close to what they would have written for the syntaxes they just defined.
-
-\begin{figure*}
-	\centering
-	\includegraphics[width=\textwidth]{Diagram}
-\end{figure*}
 
 \section{Discussion}
 
@@ -884,7 +895,7 @@ The work is supported by the \grantsponsor{MOST}{Ministry of Science and Technol
 	\\
 	%
 	\\[\AgdaEmptyExtraSkip]%
-	\>[0]\AgdaFunction{ren}%
+	\>[0]\AgdaFunction{rename}%
 	\>[210I]\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaSymbol{∀}\AgdaSpace{}%
 	\AgdaSymbol{\{}\AgdaBound{σ}\AgdaSpace{}%
@@ -912,7 +923,7 @@ The work is supported by the \grantsponsor{MOST}{Ministry of Science and Technol
 	\AgdaBound{σ}\AgdaSpace{}%
 	\AgdaGeneralizable{Δ}\<%
 	\\
-	\>[0]\AgdaFunction{ren}\AgdaSpace{}%
+	\>[0]\AgdaFunction{rename}\AgdaSpace{}%
 	\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaBound{t}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
