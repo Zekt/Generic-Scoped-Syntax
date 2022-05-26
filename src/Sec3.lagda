@@ -44,22 +44,26 @@ data Lam : Type → List Type → Set where
   ‵app : ∀ {Γ σ τ} → Lam (σ ‵→ τ) Γ → Lam σ Γ → Lam τ Γ
   ‵lam : ∀ {Γ σ τ} → Lam τ (σ ∷ Γ)  → Lam (σ ‵→ τ) Γ
 
-postulate
-  Syntaxᶜˢ : ConDs (I × List I) → Set₁
---Syntaxᶜˢ [] = Lift _ ⊤
---Syntaxᶜˢ {I} (D ∷ Ds) =  Σ[ D' ∈ (List I → ConD (I × List I))]
---                         Σ[ _ ∈ D ≡ σ (List I) D' ] {!!}
+extend : (∀ {i} → Var i Γ → Var i Δ)
+       → Var i (j ∷ Γ) → Var i (j ∷ Δ)
+extend f z = z
+extend f (s v) = s (f v)
+
+rename : (∀ {i} → Var i Γ → Var i Δ)
+       → Lam j Γ → Lam j Δ
+rename f (‵var x)   = ‵var (f x)
+rename f (‵app x y) = ‵app (rename f x) (rename f y)
+rename f (‵lam x)   = ‵lam (rename (extend f) x)
 
 open import Generics.Description
 
 postulate
   Syntax : DataD → Set
 
-record
-  Semantics
-    (D : DataD)
-    (Sy : Syntax D)
-    (V C : I → List I → Set) : Set
+record Semantics
+         (D : DataD)
+         (Sy : Syntax D)
+         (V C : I → List I → Set) : Set
   where
 
 postulate
@@ -85,5 +89,5 @@ defineFold _ n = declareData n 0 (quoteTerm Set) >>= λ _ →
                  defineData n [] >>= λ _ →
                  return tt
 
-unquoteDecl rename = defineFold RenameP rename
+--unquoteDecl rename = defineFold RenameP rename
 \end{code}
