@@ -1,0 +1,164 @@
+%% This BibTeX bibliography file was created using BibDesk.
+%% http://bibdesk.sourceforge.net/
+
+%% Created for Josh Ko at 2022-05-29 17:16:03 +0800 
+
+
+%% Saved with string encoding Unicode (UTF-8) 
+
+
+
+@misc{Ko-NDGP,
+	abstract = {Datatype-generic programming is natural and useful in dependently typed languages such as Agda. However, datatype-generic libraries in Agda are not reused as much as they should be, because traditionally they work only on datatypes decoded from a library's own version of datatype descriptions; this means that different generic libraries cannot be used together, and they do not work on native datatypes, which are preferred by the practical Agda programmer for better language support and access to other libraries. This paper presents a framework using Agda's elaborator reflection to instantiate datatype-generic programs as, and for, a useful range of native datatypes and functions ---including universe-polymorphic ones--- in programmer-friendly and customisable forms. Thanks to the power of elaborator reflection, generic programs do not need to be drastically rewritten compared to their traditional forms, making it easy to adapt existing generic libraries and develop new ones. We expect that datatype-generic libraries built with our framework ---being interoperable with native entities--- will finally be suitable for the toolbox of the practical Agda programmer.},
+	author = {Ko, Hsiang-Shang and Chen, Liang-Ting and Lin, Tzu-Chi},
+	date-added = {2022-03-13 16:23:52 +0800},
+	date-modified = {2022-05-27 15:42:04 +0800},
+	howpublished = {Conditionally accepted for the \textit{International Conference on Functional Programming} (ICFP) 2022},
+	title = {Datatype-Generic Programming Meets Elaborator Reflection},
+	url = {https://github.com/Zekt/Type-Embellishment/raw/master/tex/ICFP22/NDGP.pdf},
+	year = {2022},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCtLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0tvIGV0IGFsIDIwMjIgLSBEYXRhdHlwZS1HZW5lcmljIFByb2dyYW1taW5nIE1lZXRzIEVsYWJvcmF0b3IgUmVmbGVjdGlvbi5wZGZPEQLOAAAAAALOAAIAAAZTeXN0ZW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQkQAAf////8fS28gZXQgYWwgMjAyMiAtIERhI0ZGRkZGRkZGLnBkZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAAAEAAYAAAogY3UAAAAAAAAAAAAAAAAADUJpYlJlcG9zaXRvcnkAAAIAsC86VXNlcnM6am9zaGtvOkxpYnJhcnk6TW9iaWxlIERvY3VtZW50czpKRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlcjpEb2N1bWVudHM6QmliUmVwb3NpdG9yeTpLbyBldCBhbCAyMDIyIC0gRGF0YXR5cGUtR2VuZXJpYyBQcm9ncmFtbWluZyBNZWV0cyBFbGFib3JhdG9yIFJlZmxlY3Rpb24ucGRmAA4AmgBMAEsAbwAgAGUAdAAgAGEAbAAgADIAMAAyADIAIAAtACAARABhAHQAYQB0AHkAcABlAC0ARwBlAG4AZQByAGkAYwAgAFAAcgBvAGcAcgBhAG0AbQBpAG4AZwAgAE0AZQBlAHQAcwAgAEUAbABhAGIAbwByAGEAdABvAHIAIABSAGUAZgBsAGUAYwB0AGkAbwBuAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCuVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9LbyBldCBhbCAyMDIyIC0gRGF0YXR5cGUtR2VuZXJpYyBQcm9ncmFtbWluZyBNZWV0cyBFbGFib3JhdG9yIFJlZmxlY3Rpb24ucGRmABMAAS8AABUAAgAN//8AAAAIAA0AGgAkANQAAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAADpg==}}
+
+@article{Fiore-SOAS-Agda,
+	abstract = {Despite extensive research both on the theoretical and practical fronts, formalising, reasoning about, and implementing languages with variable binding is still a daunting endeavour -- repetitive boilerplate and the overly complicated metatheory of capture-avoiding substitution often get in the way of progressing on to the actually interesting properties of a language. Existing developments offer some relief, however at the expense of inconvenient and error-prone term encodings and lack of formal foundations.\par
+
+We present a mathematically-inspired language-formalisation framework implemented in Agda. The system translates the description of a syntax signature with variable-binding operators into an intrinsically-encoded, inductive data type equipped with syntactic operations such as weakening and substitution, along with their correctness properties. The generated metatheory further incorporates metavariables and their associated operation of metasubstitution, which enables second-order equational/rewriting reasoning. The underlying mathematical foundation of the framework -- initial algebra semantics -- derives compositional interpretations of languages into their models satisfying the semantic substitution lemma by construction.},
+	author = {Fiore, Marcelo and Szamozvancev, Dmitrij},
+	date-added = {2022-04-28 14:22:34 +0800},
+	date-modified = {2022-04-28 14:24:47 +0800},
+	doi = {10.1145/3498715},
+	journal = {Proceedings of the ACM on Programming Languages},
+	number = {POPL},
+	pages = {53:1--29},
+	title = {Formal Metatheory of Second-Order Abstract Syntax},
+	volume = {6},
+	year = {2022},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCpLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0Zpb3JlIGV0IGFsIDIwMjIgLSBGb3JtYWwgTWV0YXRoZW9yeSBvZiBTZWNvbmQtT3JkZXIgQWJzdHJhY3QgU3ludGF4LnBkZk8RAr4AAAAAAr4AAgAABlN5c3RlbQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCRAAB/////x9GaW9yZSBldCBhbCAyMDIyIC0jRkZGRkZGRkYucGRmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AAAAAAAAAAAAAAAAAAQABgAACiBjdQAAAAAAAAAAAAAAAAANQmliUmVwb3NpdG9yeQAAAgCsLzpVc2Vyczpqb3Noa286TGlicmFyeTpNb2JpbGUgRG9jdW1lbnRzOkpGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyOkRvY3VtZW50czpCaWJSZXBvc2l0b3J5OkZpb3JlIGV0IGFsIDIwMjIgLSBGb3JtYWwgTWV0YXRoZW9yeSBvZiBTZWNvbmQtT3JkZXIgQWJzdHJhY3QgU3ludGF4LnBkZgAOAJIASABGAGkAbwByAGUAIABlAHQAIABhAGwAIAAyADAAMgAyACAALQAgAEYAbwByAG0AYQBsACAATQBlAHQAYQB0AGgAZQBvAHIAeQAgAG8AZgAgAFMAZQBjAG8AbgBkAC0ATwByAGQAZQByACAAQQBiAHMAdAByAGEAYwB0ACAAUwB5AG4AdABhAHgALgBwAGQAZgAPAA4ABgBTAHkAcwB0AGUAbQASAKpVc2Vycy9qb3Noa28vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0Zpb3JlIGV0IGFsIDIwMjIgLSBGb3JtYWwgTWV0YXRoZW9yeSBvZiBTZWNvbmQtT3JkZXIgQWJzdHJhY3QgU3ludGF4LnBkZgATAAEvAAAVAAIADf//AAAACAANABoAJADQAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAAA5I=}}
+
+@inproceedings{Ahrens-typed-abstract-syntax,
+	abstract = {In previous work (``From signatures to monads in UniMath''),we described a category-theoretic construction of abstract syntax from a signature, mechanized in the UniMath library based on the \texttt{Coq} proof assistant.\par
+
+In the present work, we describe what was necessary to generalize that work to account for simply-typed languages. First, some definitions had to be generalized to account for the natural appearance of non-endofunctors in the simply-typed case. As it turns out, in many cases our mechanized results carried over to the generalized definitions without any code change. Second, an existing mechanized library on $\omega$-cocontinuous functors had to be extended by constructions and theorems necessary for constructing multi-sorted syntax. Third, the theoretical framework for the semantical signatures had to be generalized from a monoidal to a bicategorical setting, again to account for non-endofunctors arising in the typed case. This uses actions of endofunctors on functors with given source, and the corresponding notion of strong functors between actions, all formalized in UniMath using a recently developed library of bicategory theory. We explain what needed to be done to plug all of these ingredients together, modularly.\par
+
+The main result of our work is a general construction that, when fed with a signature for a simply-typed language, returns an implementation of that language together with suitable boilerplate code, in particular, a certified monadic substitution operation.},
+	author = {Ahrens, Benedikt and Matthes, Ralph and M{\"o}rtberg, Anders},
+	booktitle = {International Conference on Certified Programs and Proofs (CPP)},
+	date-added = {2022-05-27 15:35:18 +0800},
+	date-modified = {2022-05-27 15:36:36 +0800},
+	doi = {10.1145/3497775.3503678},
+	pages = {307--323},
+	publisher = {ACM},
+	title = {Implementing a Category-Theoretic Framework for Typed Abstract Syntax},
+	year = 2022,
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxC+Li4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0FocmVucyBldCBhbCAyMDIyIC0gSW1wbGVtZW50aW5nIGEgQ2F0ZWdvcnktVGhlb3JldGljIEZyYW1ld29yayBmb3IgVHlwZWQgQWJzdHJhY3QgU3ludGF4LnBkZk8RAxQAAAAAAxQAAgAABlN5c3RlbQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCRAAB/////x9BaHJlbnMgZXQgYWwgMjAyMiAjRkZGRkZGRkYucGRmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AAAAAAAAAAAAAAAAAAQABgAACiBjdQAAAAAAAAAAAAAAAAANQmliUmVwb3NpdG9yeQAAAgDBLzpVc2Vyczpqb3Noa286TGlicmFyeTpNb2JpbGUgRG9jdW1lbnRzOkpGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyOkRvY3VtZW50czpCaWJSZXBvc2l0b3J5OkFocmVucyBldCBhbCAyMDIyIC0gSW1wbGVtZW50aW5nIGEgQ2F0ZWdvcnktVGhlb3JldGljIEZyYW1ld29yayBmb3IgVHlwZWQgQWJzdHJhY3QgU3ludGF4LnBkZgAADgC8AF0AQQBoAHIAZQBuAHMAIABlAHQAIABhAGwAIAAyADAAMgAyACAALQAgAEkAbQBwAGwAZQBtAGUAbgB0AGkAbgBnACAAYQAgAEMAYQB0AGUAZwBvAHIAeQAtAFQAaABlAG8AcgBlAHQAaQBjACAARgByAGEAbQBlAHcAbwByAGsAIABmAG8AcgAgAFQAeQBwAGUAZAAgAEEAYgBzAHQAcgBhAGMAdAAgAFMAeQBuAHQAYQB4AC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgC/VXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9BaHJlbnMgZXQgYWwgMjAyMiAtIEltcGxlbWVudGluZyBhIENhdGVnb3J5LVRoZW9yZXRpYyBGcmFtZXdvcmsgZm9yIFR5cGVkIEFic3RyYWN0IFN5bnRheC5wZGYAABMAAS8AABUAAgAN//8AAAAIAA0AGgAkAOUAAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAAD/Q==}}
+
+@article{Allais-generic-syntax,
+	abstract = {The syntax of almost every programming language includes a notion of binder and corresponding bound occurrences, along with the accompanying notions of $\alpha$-equivalence, capture-avoiding substitution, typing contexts, runtime environments, and so on. In the past, implementing and reasoning about programming languages required careful handling to maintain the correct behaviour of bound variables. Modern programming languages include features that enable constraints like scope safety to be expressed in types. Nevertheless, the programmer is still forced to write the same boilerplate over again for each new implementation of a scope-safe operation (e.g., renaming, substitution, desugaring, printing), and then again for correctness proofs. We present an expressive universe of syntaxes with binding and demonstrate how to (1) implement scope-safe traversals once and for all by generic programming; and (2) how to derive properties of these traversals by generic proving. Our universe description, generic traversals and proofs, and our examples have all been formalised in Agda and are available in the accompanying material available online at https://github.com/gallais/generic-syntax.},
+	author = {Allais, Guillaume and Atkey, Robert and Chapman, James and McBride, Conor and McKinna, James},
+	date-added = {2020-09-26 22:55:37 +0800},
+	date-modified = {2022-05-28 14:27:56 +0800},
+	doi = {10.1017/S0956796820000076},
+	journal = {Journal of Functional Programming},
+	pages = {e22:1-51},
+	title = {A Type- and Scope-Safe Universe of Syntaxes with Binding: Their Semantics and Proofs},
+	volume = {31},
+	year = {2021},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxDMLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0FsbGFpcyBldCBhbCAyMDIxIC0gQSBUeXBlLSBhbmQgU2NvcGUtU2FmZSBVbml2ZXJzZSBvZiBTeW50YXhlcyB3aXRoIEJpbmRpbmcgVGhlaXIgU2VtYW50aWNzIGFuZCBQcm9vZnMucGRmTxEDTAAAAAADTAACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0FsbGFpcyBldCBhbCAyMDIxICNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAM8vOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6QWxsYWlzIGV0IGFsIDIwMjEgLSBBIFR5cGUtIGFuZCBTY29wZS1TYWZlIFVuaXZlcnNlIG9mIFN5bnRheGVzIHdpdGggQmluZGluZyBUaGVpciBTZW1hbnRpY3MgYW5kIFByb29mcy5wZGYAAA4A2ABrAEEAbABsAGEAaQBzACAAZQB0ACAAYQBsACAAMgAwADIAMQAgAC0AIABBACAAVAB5AHAAZQAtACAAYQBuAGQAIABTAGMAbwBwAGUALQBTAGEAZgBlACAAVQBuAGkAdgBlAHIAcwBlACAAbwBmACAAUwB5AG4AdABhAHgAZQBzACAAdwBpAHQAaAAgAEIAaQBuAGQAaQBuAGcAIABUAGgAZQBpAHIAIABTAGUAbQBhAG4AdABpAGMAcwAgAGEAbgBkACAAUAByAG8AbwBmAHMALgBwAGQAZgAPAA4ABgBTAHkAcwB0AGUAbQASAM1Vc2Vycy9qb3Noa28vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0FsbGFpcyBldCBhbCAyMDIxIC0gQSBUeXBlLSBhbmQgU2NvcGUtU2FmZSBVbml2ZXJzZSBvZiBTeW50YXhlcyB3aXRoIEJpbmRpbmcgVGhlaXIgU2VtYW50aWNzIGFuZCBQcm9vZnMucGRmAAATAAEvAAAVAAIADf//AAAACAANABoAJADzAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAABEM=}}
+
+@misc{Kokke-PLFA,
+	author = {Kokke, Wen and Wadler, Philip and Siek, Jeremy G.},
+	date-added = {2020-04-27 14:44:51 +0800},
+	date-modified = {2020-08-31 17:21:24 +0800},
+	title = {Programming Language Foundations in {Agda} (Version 20.07)},
+	url = {http://plfa.inf.ed.ac.uk/20.07/},
+	year = {2020},
+	bdsk-url-1 = {https://plfa.github.io}}
+
+@article{Abel-POPLMark-reloaded,
+	abstract = {We propose a new collection of benchmark problems in mechanizing the metatheory of programming languages, in order to compare and push the state of the art of proof assistants. In particular, we focus on proofs using logical relations (LRs) and propose establishing strong normalization of a simply typed calculus with a proof by Kripke-style LRs as a benchmark. We give a modern view of this well-understood problem by formulating our LR on well-typed terms. Using this case study, we share some of the lessons learned tackling this problem in different dependently typed proof environments. In particular, we consider the mechanization in Beluga, a proof environment that supports higher-order abstract syntax encodings and contrast it to the development and strategies used in general-purpose proof assistants such as Coq and Agda. The goal of this paper is to engage the community in discussions on what support in proof environments is needed to truly bring mechanized metatheory to the masses and engage said community in the crafting of future benchmarks.},
+	author = {Abel, Andreas and Allais, Guillaume and Hameer, Aliya and Pientka, Brigitte and Momigliano, Alberto and Sch{\"a}fer, Steven and Stark, Kathrin},
+	date-added = {2020-01-17 10:28:02 +0800},
+	date-modified = {2021-07-07 15:42:09 +0800},
+	doi = {10.1017/S0956796819000170},
+	journal = {Journal of Functional Programming},
+	pages = {e19:1-43},
+	title = {{POPLMark} Reloaded: Mechanizing Proofs by Logical Relations},
+	volume = {29},
+	year = {2019},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCwLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0FiZWwgZXQgYWwgMjAxOSAtIFBPUExNYXJrIFJlbG9hZGVkIE1lY2hhbml6aW5nIFByb29mcyBieSBMb2dpY2FsIFJlbGF0aW9ucy5wZGZPEQLcAAAAAALcAAIAAAZTeXN0ZW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQkQAAf////8fQWJlbCBldCBhbCAyMDE5IC0gI0ZGRkZGRkZGLnBkZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAAAEAAYAAAogY3UAAAAAAAAAAAAAAAAADUJpYlJlcG9zaXRvcnkAAAIAsy86VXNlcnM6am9zaGtvOkxpYnJhcnk6TW9iaWxlIERvY3VtZW50czpKRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlcjpEb2N1bWVudHM6QmliUmVwb3NpdG9yeTpBYmVsIGV0IGFsIDIwMTkgLSBQT1BMTWFyayBSZWxvYWRlZCBNZWNoYW5pemluZyBQcm9vZnMgYnkgTG9naWNhbCBSZWxhdGlvbnMucGRmAAAOAKAATwBBAGIAZQBsACAAZQB0ACAAYQBsACAAMgAwADEAOQAgAC0AIABQAE8AUABMAE0AYQByAGsAIABSAGUAbABvAGEAZABlAGQAIABNAGUAYwBoAGEAbgBpAHoAaQBuAGcAIABQAHIAbwBvAGYAcwAgAGIAeQAgAEwAbwBnAGkAYwBhAGwAIABSAGUAbABhAHQAaQBvAG4AcwAuAHAAZABmAA8ADgAGAFMAeQBzAHQAZQBtABIAsVVzZXJzL2pvc2hrby9MaWJyYXJ5L01vYmlsZSBEb2N1bWVudHMvSkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXIvRG9jdW1lbnRzL0JpYlJlcG9zaXRvcnkvQWJlbCBldCBhbCAyMDE5IC0gUE9QTE1hcmsgUmVsb2FkZWQgTWVjaGFuaXppbmcgUHJvb2ZzIGJ5IExvZ2ljYWwgUmVsYXRpb25zLnBkZgAAEwABLwAAFQACAA3//wAAAAgADQAaACQA1wAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAO3}}
+
+@inproceedings{Christiansen-elaborator-reflection,
+	abstract = {Many programming languages and proof assistants are defined by elaboration from a high-level language with a great deal of implicit information to a highly explicit core language. In many advanced languages, these elaboration facilities contain powerful tools for program construction, but these tools are rarely designed to be repurposed by users. We describe \emph{elaborator reflection}, a paradigm for metaprogramming in which the elaboration machinery is made directly available to metaprograms, as well as a concrete realization of elaborator reflection in Idris, a functional language with full dependent types. We demonstrate the applicability of Idris's reflected elaboration framework to a number of realistic problems, we discuss the motivation for the specific features of its design, and we explore the broader meaning of elaborator reflection as it can relate to other languages.},
+	author = {Christiansen, David and Brady, Edwin},
+	booktitle = {International Conference on Functional Programming (ICFP)},
+	date-added = {2017-07-31 07:56:32 +0000},
+	date-modified = {2017-07-31 07:57:59 +0000},
+	doi = {10.1145/3022670.2951932},
+	pages = {284-297},
+	publisher = {ACM},
+	title = {Elaborator Reflection: Extending {Idris} in {Idris}},
+	year = {2016},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCtLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0NocmlzdGlhbnNlbiBldCBhbCAyMDE2IC0gRWxhYm9yYXRvciBSZWZsZWN0aW9uIEV4dGVuZGluZyBJZHJpcyBpbiBJZHJpcy5wZGZPEQLOAAAAAALOAAIAAAZTeXN0ZW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQkQAAf////8fQ2hyaXN0aWFuc2VuIGV0IGFsI0ZGRkZGRkZGLnBkZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAAAEAAYAAAogY3UAAAAAAAAAAAAAAAAADUJpYlJlcG9zaXRvcnkAAAIAsC86VXNlcnM6am9zaGtvOkxpYnJhcnk6TW9iaWxlIERvY3VtZW50czpKRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlcjpEb2N1bWVudHM6QmliUmVwb3NpdG9yeTpDaHJpc3RpYW5zZW4gZXQgYWwgMjAxNiAtIEVsYWJvcmF0b3IgUmVmbGVjdGlvbiBFeHRlbmRpbmcgSWRyaXMgaW4gSWRyaXMucGRmAA4AmgBMAEMAaAByAGkAcwB0AGkAYQBuAHMAZQBuACAAZQB0ACAAYQBsACAAMgAwADEANgAgAC0AIABFAGwAYQBiAG8AcgBhAHQAbwByACAAUgBlAGYAbABlAGMAdABpAG8AbgAgAEUAeAB0AGUAbgBkAGkAbgBnACAASQBkAHIAaQBzACAAaQBuACAASQBkAHIAaQBzAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCuVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9DaHJpc3RpYW5zZW4gZXQgYWwgMjAxNiAtIEVsYWJvcmF0b3IgUmVmbGVjdGlvbiBFeHRlbmRpbmcgSWRyaXMgaW4gSWRyaXMucGRmABMAAS8AABUAAgAN//8AAAAIAA0AGgAkANQAAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAADpg==}}
+
+@incollection{Gibbons-DGP,
+	abstract = {\emph{Generic programming} aims to increase the flexibility of programming languages, by expanding the possibilities for parametrization --- ideally, without also expanding the possibilities for uncaught errors. The term means different things to different people: \emph{parametric polymorphism}, \emph{data abstraction}, \emph{meta-programming}, and so on. We use it to mean polytypism, that is, parametrization by the \emph{shape} of data structures rather than their contents. To avoid confusion with other uses, we have coined the qualified term \emph{datatype-generic programming} for this purpose. In these lecture notes, we expand on the definition of datatype-generic programming, and present some examples of datatype-generic programs. We also explore the connection with \emph{design patterns} in object-oriented programming; in particular, we argue that certain design patterns are just higher-order datatype-generic programs.},
+	author = {Gibbons, Jeremy},
+	booktitle = {International Spring School on Datatype-Generic Programming (SSDGP) 2006},
+	date-added = {2013-04-23 07:10:10 +0000},
+	date-modified = {2022-02-26 10:37:55 +0800},
+	doi = {10.1007/978-3-540-76786-2_1},
+	pages = {1--71},
+	publisher = {Springer},
+	series = {Lecture Notes in Computer Science},
+	title = {Datatype-Generic Programming},
+	volume = {4719},
+	year = {2007},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCQLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0dpYmJvbnMgMjAwNyAtIERhdGF0eXBlLUdlbmVyaWMgUHJvZ3JhbW1pbmcucGRmTxECXAAAAAACXAACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0dpYmJvbnMgMjAwNyAtIERhdCNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAJMvOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6R2liYm9ucyAyMDA3IC0gRGF0YXR5cGUtR2VuZXJpYyBQcm9ncmFtbWluZy5wZGYAAA4AYAAvAEcAaQBiAGIAbwBuAHMAIAAyADAAMAA3ACAALQAgAEQAYQB0AGEAdAB5AHAAZQAtAEcAZQBuAGUAcgBpAGMAIABQAHIAbwBnAHIAYQBtAG0AaQBuAGcALgBwAGQAZgAPAA4ABgBTAHkAcwB0AGUAbQASAJFVc2Vycy9qb3Noa28vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0dpYmJvbnMgMjAwNyAtIERhdGF0eXBlLUdlbmVyaWMgUHJvZ3JhbW1pbmcucGRmAAATAAEvAAAVAAIADf//AAAACAANABoAJAC3AAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAAAxc=}}
+
+@incollection{Brady-inductive-families-indices,
+	abstract = {We consider the problem of efficient representation of dependently typed data. In particular, we consider a language \textsf{TT} based on Dybjer's notion of \textbf{inductive families}~[10] and reanalyse their general form with a view to optimising the storage associated with their use. We introduce an execution language, \textsf{ExTT}, which allows the commenting out of computationally irrelevant subterms and show how to use properties of elimination rules to elide constructor arguments and tags in \textsf{ExTT}. We further show how some types can be collapsed entirely at run-time. Several examples are given, including a representation of the simply typed $\lambda$-calculus for which our analysis yields an 80\% reduction in run-time storage requirements.},
+	author = {Brady, Edwin and McBride, Conor and McKinna, James},
+	booktitle = {Types for Proofs and Programs},
+	date-added = {2011-05-05 20:40:14 +0100},
+	date-modified = {2015-12-09 12:11:20 +0000},
+	doi = {10.1007/978-3-540-24849-1_8},
+	pages = {115-129},
+	publisher = {Springer},
+	read = {1},
+	series = {Lecture Notes in Computer Science},
+	title = {Inductive Families Need Not Store Their Indices},
+	volume = {3085},
+	year = {2004},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCnLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0JyYWR5IGV0IGFsIDIwMDQgLSBJbmR1Y3RpdmUgRmFtaWxpZXMgTmVlZCBOb3QgU3RvcmUgVGhlaXIgSW5kaWNlcy5wZGZPEQK2AAAAAAK2AAIAAAZTeXN0ZW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQkQAAf////8fQnJhZHkgZXQgYWwgMjAwNCAtI0ZGRkZGRkZGLnBkZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAAAEAAYAAAogY3UAAAAAAAAAAAAAAAAADUJpYlJlcG9zaXRvcnkAAAIAqi86VXNlcnM6am9zaGtvOkxpYnJhcnk6TW9iaWxlIERvY3VtZW50czpKRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlcjpEb2N1bWVudHM6QmliUmVwb3NpdG9yeTpCcmFkeSBldCBhbCAyMDA0IC0gSW5kdWN0aXZlIEZhbWlsaWVzIE5lZWQgTm90IFN0b3JlIFRoZWlyIEluZGljZXMucGRmAA4AjgBGAEIAcgBhAGQAeQAgAGUAdAAgAGEAbAAgADIAMAAwADQAIAAtACAASQBuAGQAdQBjAHQAaQB2AGUAIABGAGEAbQBpAGwAaQBlAHMAIABOAGUAZQBkACAATgBvAHQAIABTAHQAbwByAGUAIABUAGgAZQBpAHIAIABJAG4AZABpAGMAZQBzAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCoVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9CcmFkeSBldCBhbCAyMDA0IC0gSW5kdWN0aXZlIEZhbWlsaWVzIE5lZWQgTm90IFN0b3JlIFRoZWlyIEluZGljZXMucGRmABMAAS8AABUAAgAN//8AAAAIAA0AGgAkAM4AAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAADiA==}}
+
+@inproceedings{Altenkirch-GP-within-DTP,
+	abstract = {We show how higher kinded generic programming can be represented faithfully within a dependently typed programming system. This development has been implemented using the \textsc{Oleg} system.\par
+
+The present work can be seen as evidence for our thesis that extensions of type systems can be done by \emph{programming} within a dependently typed language, using data as codes for types.},
+	author = {Altenkirch, Thorsten and McBride, Conor},
+	booktitle = {Generic Programming},
+	date-added = {2011-04-19 19:37:06 +0100},
+	date-modified = {2021-09-27 14:02:09 +0800},
+	doi = {10.1007/978-0-387-35672-3_1},
+	pages = {1-20},
+	publisher = {Springer},
+	read = {1},
+	series = {IFIP --- The International Federation for Information Processing},
+	title = {Generic Programming within Dependently Typed Programming},
+	volume = {115},
+	year = {2003},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxC1Li4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0FsdGVua2lyY2ggZXQgYWwgMjAwMyAtIEdlbmVyaWMgUHJvZ3JhbW1pbmcgd2l0aGluIERlcGVuZGVudGx5IFR5cGVkIFByb2dyYW1taW5nLnBkZk8RAu4AAAAAAu4AAgAABlN5c3RlbQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCRAAB/////x9BbHRlbmtpcmNoIGV0IGFsIDIjRkZGRkZGRkYucGRmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AAAAAAAAAAAAAAAAAAQABgAACiBjdQAAAAAAAAAAAAAAAAANQmliUmVwb3NpdG9yeQAAAgC4LzpVc2Vyczpqb3Noa286TGlicmFyeTpNb2JpbGUgRG9jdW1lbnRzOkpGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyOkRvY3VtZW50czpCaWJSZXBvc2l0b3J5OkFsdGVua2lyY2ggZXQgYWwgMjAwMyAtIEdlbmVyaWMgUHJvZ3JhbW1pbmcgd2l0aGluIERlcGVuZGVudGx5IFR5cGVkIFByb2dyYW1taW5nLnBkZgAOAKoAVABBAGwAdABlAG4AawBpAHIAYwBoACAAZQB0ACAAYQBsACAAMgAwADAAMwAgAC0AIABHAGUAbgBlAHIAaQBjACAAUAByAG8AZwByAGEAbQBtAGkAbgBnACAAdwBpAHQAaABpAG4AIABEAGUAcABlAG4AZABlAG4AdABsAHkAIABUAHkAcABlAGQAIABQAHIAbwBnAHIAYQBtAG0AaQBuAGcALgBwAGQAZgAPAA4ABgBTAHkAcwB0AGUAbQASALZVc2Vycy9qb3Noa28vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0FsdGVua2lyY2ggZXQgYWwgMjAwMyAtIEdlbmVyaWMgUHJvZ3JhbW1pbmcgd2l0aGluIERlcGVuZGVudGx5IFR5cGVkIFByb2dyYW1taW5nLnBkZgATAAEvAAAVAAIADf//AAAACAANABoAJADcAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAAA84=}}
+
+@article{Benke-generic-universes,
+	abstract = {We show how to write generic programs and proofs in Martin-L{\"o}f type theory. To this end we consider several extensions of Martin-L{\"o}f's logical framework for dependent types. Each extension has a universe of codes (signatures) for inductively defined sets with generic formation, introduction, elimination, and equality rules. These extensions are modeled on Dybjer and Setzer's finitely axiomatized theories of inductive-recursive definitions, which also have universes of codes for sets, and generic formation, introduction, elimination, and equality rules. Here we consider several smaller universes of interest for generic programming and universal algebra. We formalize one-sorted and many-sorted term algebras, as well as iterated, generalized, parameterized, and indexed inductive definitions. We also show how to extend the techniques of generic programming to these universes. Furthermore, we give generic proofs of reflexivity and substitutivity of a generic equality test: Most of the definitions in the paper have been implemented using the proof assistant Alfa for dependent type theory.},
+	author = {Benke, Marcin and Dybjer, Peter and Jansson, Patrik},
+	date-added = {2022-02-16 22:32:00 +0800},
+	date-modified = {2022-02-16 22:34:53 +0800},
+	journal = {Nordic Journal of Computing},
+	number = {4},
+	pages = {265--289},
+	title = {Universes for Generic Programs and Proofs in Dependent Type Theory},
+	url = {https://www.mimuw.edu.pl/~ben/Papers/universes.pdf},
+	volume = {10},
+	year = {2003},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxC6Li4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0JlbmtlIGV0IGFsIDIwMDMgLSBVbml2ZXJzZXMgZm9yIEdlbmVyaWMgUHJvZ3JhbXMgYW5kIFByb29mcyBpbiBEZXBlbmRlbnQgVHlwZSBUaGVvcnkucGRmTxEDBAAAAAADBAACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0JlbmtlIGV0IGFsIDIwMDMgLSNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAL0vOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6QmVua2UgZXQgYWwgMjAwMyAtIFVuaXZlcnNlcyBmb3IgR2VuZXJpYyBQcm9ncmFtcyBhbmQgUHJvb2ZzIGluIERlcGVuZGVudCBUeXBlIFRoZW9yeS5wZGYAAA4AtABZAEIAZQBuAGsAZQAgAGUAdAAgAGEAbAAgADIAMAAwADMAIAAtACAAVQBuAGkAdgBlAHIAcwBlAHMAIABmAG8AcgAgAEcAZQBuAGUAcgBpAGMAIABQAHIAbwBnAHIAYQBtAHMAIABhAG4AZAAgAFAAcgBvAG8AZgBzACAAaQBuACAARABlAHAAZQBuAGQAZQBuAHQAIABUAHkAcABlACAAVABoAGUAbwByAHkALgBwAGQAZgAPAA4ABgBTAHkAcwB0AGUAbQASALtVc2Vycy9qb3Noa28vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0JlbmtlIGV0IGFsIDIwMDMgLSBVbml2ZXJzZXMgZm9yIEdlbmVyaWMgUHJvZ3JhbXMgYW5kIFByb29mcyBpbiBEZXBlbmRlbnQgVHlwZSBUaGVvcnkucGRmAAATAAEvAAAVAAIADf//AAAACAANABoAJADhAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAAA+k=}}
