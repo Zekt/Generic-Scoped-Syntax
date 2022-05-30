@@ -1,12 +1,46 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% http://bibdesk.sourceforge.net/
 
-%% Created for Josh Ko at 2022-05-29 17:16:03 +0800 
+%% Created for Josh Ko at 2022-05-30 06:11:13 +0800 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@inproceedings{Forster-Coq-a-la-carte,
+	abstract = {The mechanisation of the meta-theory of programming languages is still considered hard and requires considerable effort. When formalising properties of the extension of a language, one hence wants to reuse definitions and proofs. But type-theoretic proof assistants use inductive types and predicates to formalise syntax and type systems, and these definitions are closed to extensions. Available approaches for modular syntax are either inapplicable to type theory or add a layer of indirectness by requiring complicated encodings of types.\par
+
+We present a concise, transparent, and accessible approach to modular syntax with binders by adapting Swierstra's Data Types {\`a} la Carte approach to the Coq proof assistant. Our approach relies on two phases of code generation: We extend the Autosubst 2 tool and allow users to specify modular syntax with binders in a HOAS-like input language. To state and automatically compose modular functions and lemmas, we implement commands based on MetaCoq. We support modular syntax, functions, predicates, and theorems.\par
+
+We demonstrate the practicality of our approach by modular proofs of preservation, weak head normalisation, and strong normalisation for several variants of mini-ML.},
+	author = {Forster, Yannick and Stark, Kathrin},
+	booktitle = {International Conference on Certified Programs and Proofs (CPP)},
+	date-added = {2022-05-30 06:11:11 +0800},
+	date-modified = {2022-05-30 06:11:11 +0800},
+	doi = {10.1145/3372885.3373817},
+	pages = {186--200},
+	publisher = {ACM},
+	title = {Coq {\`a} la Carte: A Practical Approach to Modular Syntax with Binders},
+	year = 2020,
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhbxC9AC4ALgAvAC4ALgAvAC4ALgAvAC4ALgAvAEwAaQBiAHIAYQByAHkALwBNAG8AYgBpAGwAZQAgAEQAbwBjAHUAbQBlAG4AdABzAC8ASgBGAEoAVwBXAFAANgA0AFEARAB+AGMAbwBtAH4AZwBvAG8AZABpAHcAYQByAGUAfgBHAG8AbwBkAFIAZQBhAGQAZQByAC8ARABvAGMAdQBtAGUAbgB0AHMALwBCAGkAYgBSAGUAcABvAHMAaQB0AG8AcgB5AC8ARgBvAHIAcwB0AGUAcgAgAGUAdAAgAGEAbAAgADIAMAAyADAAIAAtACAAQwBvAHEAIABhAwAAIABsAGEAIABDAGEAcgB0AGUAIABBACAAUAByAGEAYwB0AGkAYwBhAGwAIABBAHAAcAByAG8AYQBjAGgAIAB0AG8AIABNAG8AZAB1AGwAYQByACAAUwB5AG4AdABhAHgAIAB3AGkAdABoACAAQgBpAG4AZABlAHIAcwAuAHAAZABmTxEDEgAAAAADEgACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0ZvcnN0ZXIgZXQgYWwgMjAyMCNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAMEvOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6Rm9yc3RlciBldCBhbCAyMDIwIC0gQ29xIGHMgCBsYSBDYXJ0ZSBBIFByYWN0aWNhbCBBcHByb2FjaCB0byBNb2R1bGFyIFN5bnRheCB3aXRoIEJpbmRlcnMucGRmAAAOALoAXABGAG8AcgBzAHQAZQByACAAZQB0ACAAYQBsACAAMgAwADIAMAAgAC0AIABDAG8AcQAgAGEDAAAgAGwAYQAgAEMAYQByAHQAZQAgAEEAIABQAHIAYQBjAHQAaQBjAGEAbAAgAEEAcABwAHIAbwBhAGMAaAAgAHQAbwAgAE0AbwBkAHUAbABhAHIAIABTAHkAbgB0AGEAeAAgAHcAaQB0AGgAIABCAGkAbgBkAGUAcgBzAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgC/VXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9Gb3JzdGVyIGV0IGFsIDIwMjAgLSBDb3EgYcyAIGxhIENhcnRlIEEgUHJhY3RpY2FsIEFwcHJvYWNoIHRvIE1vZHVsYXIgU3ludGF4IHdpdGggQmluZGVycy5wZGYAABMAAS8AABUAAgAN//8AAAAIAA0AGgAkAaEAAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAAEtw==}}
+
+@inproceedings{Delaware-meta-theory-a-la-carte,
+	abstract = {Formalizing meta-theory, or proofs about programming languages, in a proof assistant has many well-known benefits. Unfortunately, the considerable effort involved in mechanizing proofs has prevented it from becoming standard practice. This cost can be amortized by reusing as much of existing mechanized formalizations as possible when building a new language or extending an existing one. One important challenge in achieving reuse is that the inductive definitions and proofs used in these formalizations are closed to extension. This forces language designers to cut and paste existing definitions and proofs in an ad-hoc manner and to expend considerable effort to patch up the results.\par
+
+The key contribution of this paper is the development of an induction technique for extensible Church encodings using a novel reinterpretation of the universal property of folds. These encodings provide the foundation for a framework, formalized in Coq, which uses type classes to automate the composition of proofs from modular components. This framework enables a more structured approach to the reuse of meta-theory formalizations through the composition of modular inductive definitions and proofs.\par
+
+Several interesting language features, including binders and general recursion, illustrate the capabilities of our framework. We reuse these features to build fully mechanized definitions and proofs for a number of languages, including a version of mini-ML. Bounded induction enables proofs of properties for non-inductive semantic functions, and mediating type classes enable proof adaptation for more feature-rich languages.},
+	author = {Delaware, Benjamin and Oliveira, Bruno C. d. S. and Schrijvers, Tom},
+	booktitle = {Symposium on Principles of Programming Languages (POPL)},
+	date-added = {2022-05-30 06:11:11 +0800},
+	date-modified = {2022-05-30 06:11:11 +0800},
+	doi = {10.1145/2429069.2429094},
+	pages = {207-218},
+	publisher = {ACM},
+	title = {Meta-Theory {\`a} la Carte},
+	year = {2013},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhbxCTAC4ALgAvAC4ALgAvAC4ALgAvAC4ALgAvAEwAaQBiAHIAYQByAHkALwBNAG8AYgBpAGwAZQAgAEQAbwBjAHUAbQBlAG4AdABzAC8ASgBGAEoAVwBXAFAANgA0AFEARAB+AGMAbwBtAH4AZwBvAG8AZABpAHcAYQByAGUAfgBHAG8AbwBkAFIAZQBhAGQAZQByAC8ARABvAGMAdQBtAGUAbgB0AHMALwBCAGkAYgBSAGUAcABvAHMAaQB0AG8AcgB5AC8ARABlAGwAYQB3AGEAcgBlACAAZQB0ACAAYQBsACAAMgAwADEAMwAgAC0AIABNAGUAdABhAC0AVABoAGUAbwByAHkAIABhAwAAIABsAGEAIABDAGEAcgB0AGUAYQAuAHAAZABmTxECagAAAAACagACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0RlbGF3YXJlIGV0IGFsIDIwMSNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAJcvOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6RGVsYXdhcmUgZXQgYWwgMjAxMyAtIE1ldGEtVGhlb3J5IGHMgCBsYSBDYXJ0ZWEucGRmAAAOAGYAMgBEAGUAbABhAHcAYQByAGUAIABlAHQAIABhAGwAIAAyADAAMQAzACAALQAgAE0AZQB0AGEALQBUAGgAZQBvAHIAeQAgAGEDAAAgAGwAYQAgAEMAYQByAHQAZQBhAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCVVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9EZWxhd2FyZSBldCBhbCAyMDEzIC0gTWV0YS1UaGVvcnkgYcyAIGxhIENhcnRlYS5wZGYAABMAAS8AABUAAgAN//8AAAAIAA0AGgAkAU0AAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAADuw==}}
 
 @misc{Ko-NDGP,
 	abstract = {Datatype-generic programming is natural and useful in dependently typed languages such as Agda. However, datatype-generic libraries in Agda are not reused as much as they should be, because traditionally they work only on datatypes decoded from a library's own version of datatype descriptions; this means that different generic libraries cannot be used together, and they do not work on native datatypes, which are preferred by the practical Agda programmer for better language support and access to other libraries. This paper presents a framework using Agda's elaborator reflection to instantiate datatype-generic programs as, and for, a useful range of native datatypes and functions ---including universe-polymorphic ones--- in programmer-friendly and customisable forms. Thanks to the power of elaborator reflection, generic programs do not need to be drastically rewritten compared to their traditional forms, making it easy to adapt existing generic libraries and develop new ones. We expect that datatype-generic libraries built with our framework ---being interoperable with native entities--- will finally be suitable for the toolbox of the practical Agda programmer.},

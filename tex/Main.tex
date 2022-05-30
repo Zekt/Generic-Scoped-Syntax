@@ -486,7 +486,7 @@
 \begin{abstract}
 Libraries of generic operations on syntax trees with binders are emerging, and one of these is \varcitet{Allais-generic-syntax}{'s} datatype-generic library in Agda, which provides syntax-generic constructions but not in a conventional form preferred by programmers.
 We port a core part of \citeauthor{Allais-generic-syntax}'s library to our new datatype-generic framework, which uses Agda's elaborator reflection to reify generic constructions to programs close to what programmers would write by hand.
-We hope that this work will make syntax-generic libraries such as \citeauthor{Allais-generic-syntax}'s more attractive, and stimulate discussion on the development of such libraries.
+We hope that this work will make syntax-generic libraries such as \citeauthor{Allais-generic-syntax}'s more attractive, and stimulate discussion on the development of generic libraries.
 \end{abstract}
 
 \maketitle
@@ -513,9 +513,9 @@ To address the problem (for datatype-generic libraries in general), the present 
 With the framework, programmers can keep the conventional programming style, and replace some of the programs that had to be written by hand with similar-looking ones automatically generated from generic libraries.
 
 Here we report (in \cref{sec:demo}) a small but successful experiment porting a core part of \citeauthor{Allais-generic-syntax}'s library to our framework, allowing programmers to write datatypes of syntaxes in conventional forms and then reify \citeauthor{Allais-generic-syntax}'s syntax-generic operations as natural-looking functions.
-We will give a demo at the workshop and show that our framework can potentially make syntax-generic libraries such as \citeauthor{Allais-generic-syntax}'s more attractive to programmers.
-Moreover, currently there are noticeable limitations of \citeauthor{Allais-generic-syntax}'s library and of our framework (discussed in \cref{sec:discussion}), which we hope will stimulate discussion on how the development of syntax-generic libraries can be pushed further.
-Our code is available at \url{https://github.com/Zekt/Generic-Scoped-Syntax}.
+We plan to give a demo at the workshop and show that our framework can potentially make syntax-generic libraries such as \citeauthor{Allais-generic-syntax}'s more attractive to programmers.
+Moreover, currently there are noticeable limitations of our framework and of \citeauthor{Allais-generic-syntax}'s library, which we hope will stimulate discussion on how the development of (syntax-)generic libraries can be pushed further (\cref{sec:discussion}).
+Our Agda code is available at \url{https://github.com/Zekt/Generic-Scoped-Syntax}.
 
 %\citet{Ko-NDGP} have tackled similar problems in datatype-generic programming.
 %They argue that current generic programs either suffer from lack of interoperability or inefficiency.
@@ -1413,15 +1413,29 @@ Delightfully they will find these operations are reified as native functions, cl
 \section{Discussion}
 \label{sec:discussion}
 
-This work is still in progress and admits of rethinks and redesign.
-The syntax universe from Allais et al. we have referenced in our work is replaceable by others, as long as they are not more expressive than the host language, which implies a predicate definable on the datatype universe.
-We rely heavily on Agda, while the methodology applies to any language that supports elaborator reflection.
+The technique of (re-)defining \citeauthor{Allais-generic-syntax}'s \verb|Desc| universe as a predicate/subset of our \verb|DataD| universe is generally applicable to universes of other generic libraries (as long as they are not more expressive than \verb|DataD|), and makes it easier to use those libraries with our reification metaprograms (compared to reimplementing the metaprograms for each library).
+By showing that the \verb|DataD| description of a datatype satisfies several predicates, we gain access to the corresponding libraries all at once, solving the interoperability problem (\cref{sec:intro}).
+Currently our framework is implemented in Agda only, but the essential idea depends only on elaborator reflection, and should work in more languages as elaborator reflection becomes more popular.
 
-\begin{itemize}
-\item automatic proofs of the syntax predicate
-\item only covering standard features such as simply typed $\lambda$-calculus with disjoint sums~\citep{Abel-POPLMark-reloaded}
+%The universe of syntaxes from \citeauthor{Allais-generic-syntax} we have referenced in our work is replaceable by others, as long as they are not more expressive than the host language, which implies a predicate definable on the datatype universe.
+%We rely heavily on Agda, while the methodology applies to any language that supports elaborator reflection.
+
+%This work is still in progress and admits of rethinks and redesign.
+
+The reported experiment is small but already reveals some limitations of our framework and of \citeauthor{Allais-generic-syntax}'s library.
+By drawing attention to these limitations, we hope to illuminate some possible future directions for the development of (syntax-) generic libraries.
+\begin{itemize}[leftmargin=*]
+\item For the framework and generic libraries in general:
+It is not so convenient having to carefully apply generic programs to the right arguments and reifying them one at a time --- there should be a better user interface (which may require significant changes to Agda's design though).
+Proofs that \verb|DataD| descriptions satisfy the \verb|Syntax| predicate are straightforward but tedious, and should be automated, probably also with elaborator reflection.
+\item As for \citeauthor{Allais-generic-syntax}'s library and syntax-generic libraries in general:
+Currently the largest-scale development done with \citeauthor{Allais-generic-syntax}'s library seems to be a strong normalisation proof for simply typed $\lambda$-calculus with disjoint sums~\citep[Section~4.3]{Abel-POPLMark-reloaded}, whose features are standard.
+While it is conceivable that the universe can be gradually expanded to encode more datatypes, the DSL features covered will always be predetermined when defining the universe.
+If the intended users include programming language researchers, who invent new features that are unlikely to be covered by existing libraries, then libraries targeting a fixed universe of syntaxes may not be too useful.
+Here are some possible scenarios where syntax-generic libraries might help:
+Users might start with a standard syntax definition and then extend it with new features; this is currently more or less supported by our framework, which allows definitions to be printed (rather than unquoted) and then copied and pasted into the users' files.
+Or, exploiting Agda's interactive capabilities, we could generate partial definitions with holes,  although there is still the problem of where the holes should appear, which is perhaps no less difficult than the problem of composing syntaxes/type theories~\citep{Delaware-meta-theory-a-la-carte,Forster-Coq-a-la-carte}, on which much work is still needed.
 \end{itemize}
-
 
 %%
 %% The acknowledgments section is defined using the "acks" environment
