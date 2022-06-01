@@ -66,7 +66,7 @@
 \usepackage[inline]{enumitem} % for environment enumerate*
 
 \captionsetup{aboveskip=1.5ex minus .5ex,belowskip=-1.5ex minus .5ex}
-\newcommand{\codefigure}{\footnotesize\setlength{\mathindent}{0em}\setlength{\abovedisplayskip}{0ex}\setlength{\belowdisplayskip}{0ex}\noindent}
+\newcommand{\codefigure}{\normalsize\setlength{\mathindent}{0em}\setlength{\abovedisplayskip}{0ex}\setlength{\belowdisplayskip}{0ex}\noindent}
 
 \newcommand{\arXiv}[1]{\href{http://arxiv.org/abs/#1}{arXiv:\nolinkurl{#1}}}
 
@@ -494,7 +494,7 @@ We hope that this work will make syntax-generic libraries such as \citeauthor{Al
 \section{Introduction}
 \label{sec:intro}
 When implementing embedded domain-specific languages (DSLs), dependently typed programmers make use of the host languages' type systems to enforce properties of the syntaxes.
-In particular, when the syntaxes have binders and are typed, intrinsic typing has become a standard technique to make the programs well scoped and typed~\citep[Part~2]{Kokke-PLFA}.
+In particular, when the syntaxes have binders and are typed, \emph{intrinsic typing} has become a standard technique to make the programs well scoped and typed~\citep[Part~2]{Kokke-PLFA}.
 Such syntaxes share similar type structures, operations, and lemmas (with the simplest examples being renaming and substitution).
 Traditionally, programmers need to somewhat tediously redefine the operations for every distinct syntax.
 Recently, there have been generic libraries providing constructions that can be specialised for a whole family of syntaxes with binders~\citep{Allais-generic-syntax,Fiore-SOAS-Agda,Ahrens-typed-abstract-syntax}, although it remains to be seen whether these libraries will be widely adopted.
@@ -502,7 +502,7 @@ Recently, there have been generic libraries providing constructions that can be 
 We will focus on \varcitet{Allais-generic-syntax}{'s} Agda library, which treats syntax-generic programs as special cases of \emph{datatype-generic} programs~\citep{Gibbons-DGP,Benke-generic-universes,Altenkirch-GP-within-DTP}.
 %in the sense that syntaxes are typically defined as datatypes.
 Their approach (recapped in \cref{sec:recap}) is more or less standard in Agda:
-The syntax of a DSL is specified as a `description' \name|d |\verb|: Desc |\name|I|\/ (where \name|I|\/~is the type of the DSL types), from which a datatype \verb|Tm |\name|d|\/ of syntax trees is derived.
+The syntax of a DSL is specified as a `description' \name|d |\verb|: Desc |\name|I|\/ (where \name|I|\/~is the set of the DSL types), from which a datatype \verb|Tm |\name|d|\/ of syntax trees is derived.
 There is a \verb|semantics| operator that traverses the syntax trees to compute a result; the operator is parametrised by a \verb|Semantics| record, which specifies what computation to perform.
 The library provides various \verb|Semantics| parametrised by~\name|d|, which act as syntax-generic programs, and can be instantiated with \verb|semantics| as operations on syntax trees of DSLs that can be described within the \verb|Desc| universe.
 
@@ -544,8 +544,15 @@ Our Agda code is available at \url{https://github.com/Zekt/Generic-Scoped-Syntax
 
 \section{Allais et al.'s Approach}
 \label{sec:recap}
-We take a glimpse of syntax-generic programs on the universe of syntaxes \verb|Desc| defined by Allais et al.
-All definitions in this section are directly referenced from Allais et al.
+
+We first give a simplified account of the interface of \citeauthor{Allais-generic-syntax}'s library.
+To be concrete, we use simply typed $\lambda$-calculus as our running example.
+Traditionally, DSL programmers would manually define a datatype \verb|Lam| in \cref{fig:native-renaming}, where variables are represented as well scoped and typed de Bruijn indices, defined by \verb|Var| in \cref{fig:de-Bruijn-indices}.
+Then the programmers would go on and define operations on \verb|Lam| (renaming, substitution, printing, scope-checking, etc).
+One simplest example is the \verb|rename| function in \cref{fig:native-renaming}, which takes an environment~\name|ρ| represented as a function mapping variables in~\name|Γ|\/ to variables in~\name|Δ|, and applies~\name|ρ| to all the variables in a term of type \verb|Lam|.
+Among the cases of \verb|rename|, the \AgdaInductiveConstructor{lam} case is more interesting: as \name|ρ|~is pushed under the binder, it needs to be extended with a case mapping the new variable \AgdaInductiveConstructor{z} to `itself' (since we are renaming only free variables, whereas the new variable is bound), and the old variables in~\name|ρ| should be incremented to skip over the binder; this new environment for renaming the body is computed by \verb|extend| in \cref{fig:de-Bruijn-indices}.
+
+\citeauthor{Allais-generic-syntax} show that operations like \verb|rename| can be implemented generically for a family of syntaxes, and programmers need not re-define them for every new syntax as long as the syntax has a `description', which is an inhabitant of
 \begin{code}
 	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
 	\AgdaDatatype{Desc}\AgdaSpace{}%
@@ -553,73 +560,66 @@ All definitions in this section are directly referenced from Allais et al.
 	\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
 	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaPrimitive{Set₁}\AgdaSpace{}%
-	\AgdaKeyword{where}\<%	
-	\\
-	\>[0][@{}l@{\AgdaIndent{0}}]%
-	\>[2]\AgdaInductiveConstructor{σ}%
-	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Desc}\AgdaSpace{}%
-	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Desc}\AgdaSpace{}%
-	\AgdaBound{I}\<%
-	\\
-	%
-	\>[2]\AgdaInductiveConstructor{‵X}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaDatatype{List}\AgdaSpace{}%
-	\AgdaBound{I}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaBound{I}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Desc}\AgdaSpace{}%
-	\AgdaBound{I}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Desc}\AgdaSpace{}%
-	\AgdaBound{I}\<%
-	\\
-	%
-	\>[2]\AgdaInductiveConstructor{■}%
-	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaBound{I}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Desc}\AgdaSpace{}%
-	\AgdaBound{I}\<%
+	\AgdaPrimitive{Set₁}\<%
 \end{code}
-A \con|σ| describes any branching of the construction by a dependent sigma type, a \con|‵X| describes an occurrence of recursion of the syntax being defined by taking its index, and a \con|■| ends a description with the index of the constructed syntax.
-The interpretation function \verb|⟦_⟧| determines what a description actually means, i.e. what is needed to construct a syntax given a description.
-For example, a syntax of simply typed lambda calculus can be defined in this universe as \verb|STLC|.
-\verb|‵STLC| corresponds to the choice of constructors if it is natively defined.
+where \name|I|\/~is the set of the types used in the syntax.
+%More specifically, the \verb|rename| function generated by our utilities will be definitionally equivalent to the one the programmer manually defined.
+%We take a glimpse of syntax-generic programs on the universe of syntaxes \verb|Desc| defined by Allais et al.
+%All definitions in this section are directly referenced from Allais et al.
+%\begin{code}
+%	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+%	\AgdaDatatype{Desc}\AgdaSpace{}%
+%	\AgdaSymbol{(}\AgdaBound{I}\AgdaSpace{}%
+%	\AgdaSymbol{:}\AgdaSpace{}%
+%	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+%	\AgdaSymbol{:}\AgdaSpace{}%
+%	\AgdaPrimitive{Set₁}\AgdaSpace{}%
+%	\AgdaKeyword{where}\<%	
+%	\\
+%	\>[0][@{}l@{\AgdaIndent{0}}]%
+%	\>[2]\AgdaInductiveConstructor{σ}%
+%	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
+%	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+%	\AgdaSymbol{:}\AgdaSpace{}%
+%	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaDatatype{Desc}\AgdaSpace{}%
+%	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaDatatype{Desc}\AgdaSpace{}%
+%	\AgdaBound{I}\<%
+%	\\
+%	%
+%	\>[2]\AgdaInductiveConstructor{‵X}\AgdaSpace{}%
+%	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
+%	\AgdaDatatype{List}\AgdaSpace{}%
+%	\AgdaBound{I}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaBound{I}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaDatatype{Desc}\AgdaSpace{}%
+%	\AgdaBound{I}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaDatatype{Desc}\AgdaSpace{}%
+%	\AgdaBound{I}\<%
+%	\\
+%	%
+%	\>[2]\AgdaInductiveConstructor{■}%
+%	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
+%	\AgdaBound{I}\AgdaSpace{}%
+%	\AgdaSymbol{→}\AgdaSpace{}%
+%	\AgdaDatatype{Desc}\AgdaSpace{}%
+%	\AgdaBound{I}\<%
+%\end{code}
+%A \con|σ| describes any branching of the construction by a dependent sigma type, a \con|‵X| describes an occurrence of recursion of the syntax being defined by taking its index, and a \con|■| ends a description with the index of the constructed syntax.
+%The interpretation function \verb|⟦_⟧| determines what a description actually means, i.e. what is needed to construct a syntax given a description.
+Instead of giving the definition of \verb|Desc|, we only give a taste of what descriptions look like by showing a description \verb|STLC| of simply typed $\lambda$-calculus (whose details are not important):%
+\footnote{Roughly speaking, inhabitants of \AgdaDatatype{‵STLC} encode the constructor choices except the variable case, which does not need to be described because it is presupposed to be present in every syntax and have a fixed form.
+For each constructor, we describe what (recursive) arguments are needed with \AgdaInductiveConstructor{`X} ---which specifies extensions to the context and the type of the sub-expression--- and the type of the whole constructed expression with \AgdaInductiveConstructor{■}.}
+%For example, a syntax of simply typed lambda calculus can be defined in this universe as \verb|STLC| below.
 \begin{code}
-\>[0]\AgdaKeyword{data}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaPrimitive{Set}\AgdaSpace{}%
-\AgdaKeyword{where}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaInductiveConstructor{α}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\<%
-\\
-%
-\>[2]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}‵→\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaDatatype{‵STLC}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -627,8 +627,8 @@ For example, a syntax of simply typed lambda calculus can be defined in this uni
 \AgdaKeyword{where}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaInductiveConstructor{App}\AgdaSpace{}%
-\AgdaInductiveConstructor{Lam}\AgdaSpace{}%
+\>[2]\AgdaInductiveConstructor{‵App}\AgdaSpace{}%
+\AgdaInductiveConstructor{‵Lam}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -651,38 +651,39 @@ For example, a syntax of simply typed lambda calculus can be defined in this uni
 \AgdaKeyword{where}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaSymbol{(}\AgdaInductiveConstructor{App}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{)}\AgdaSpace{}%
+\>[2]\AgdaSymbol{(}\AgdaInductiveConstructor{‵App}\AgdaSpace{}%
+\>[3]\AgdaBound{σ}\AgdaSpace{}%
+\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaInductiveConstructor{‵X}\AgdaSpace{}%
 \AgdaInductiveConstructor{[]}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{‵X}\AgdaSpace{}%
 \AgdaInductiveConstructor{[]}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
+\AgdaBound{σ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{■}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{))}\<%
+\AgdaBound{τ}\AgdaSymbol{))}\<%
 \\
 %
-\>[2]\AgdaSymbol{(}\AgdaInductiveConstructor{Lam}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{)}\AgdaSpace{}%
+\>[2]\AgdaSymbol{(}\AgdaInductiveConstructor{‵Lam}\AgdaSpace{}%
+\>[3]\AgdaBound{σ}\AgdaSpace{}%
+\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaInductiveConstructor{‵X}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{∷}}\AgdaSpace{}%
 \AgdaInductiveConstructor{[]}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
+\AgdaBound{τ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{■}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{))}\<%
+\AgdaBound{τ}\AgdaSymbol{))}\<%
 \end{code}
-We can take the fixed points \verb|Tm| on which generic programs will operate.
-For example, the term traversal functions of \verb|STLC| will operate on \verb|Tm STLC|.
+The point here is that descriptions are data, from which we can compute types and functions for the described syntaxes.
+
+In place of native datatypes like \verb|Lam|, programmers write descriptions like \verb|STLC| and use a (fixed-point) operator 
 \begin{code}
 	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
 	\AgdaDatatype{Tm}\AgdaSpace{}%
@@ -698,11 +699,47 @@ For example, the term traversal functions of \verb|STLC| will operate on \verb|T
 	\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaPrimitive{Set}\<%
 \end{code}
-
-Allais et al. show that a subset of generic programs of term traversal can be described by \verb|Semantics|.
-\verb|Semantics| is parametrised by a description and families \name|V| and \name|C| of type \name|I → |\verb|List|\name| I → |\verb|Set|.
-\name|V| is the family of values that replaces bound variables during the traversal, and \name|C| is the family of what is computed from the traversal.
-The actual term traversal function can be derived from a given \verb|Semantics| via the function \verb|semantics|.
+to produce syntax datatypes like \verb|Tm STLC|.
+For these datatypes, \citeauthor{Allais-generic-syntax} provide a generic traversal function
+\begin{code}
+	\>[0]\AgdaPostulate{semantics}%
+	\>[226I]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaRecord{Semantics}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{V}\AgdaSpace{}%
+	\AgdaBound{C}\<%	
+	\\
+	\>[.][@{}l@{}]\<[226I]%
+	\>[10]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaSymbol{(∀}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{j}\AgdaSymbol{\}}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaBound{V}\AgdaSpace{}%
+	\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
+	\\
+	%
+	\>[10]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaBound{d}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaBound{C}\AgdaSpace{}%
+	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\<%
+\end{code}
+which is abstracted from the computation pattern of operations like \verb|rename|.
+The type of the contents stored in the environment and the type of the result are abstracted as \name|V|~and~\name|C| respectively.
+%\name|V| is the family of values that replaces bound variables during the traversal, and \name|C| is the family of what is computed from the traversal.
+%Allais et al. show that a subset of generic programs of term traversal can be described by \verb|Semantics|.
+%\verb|Semantics| is parametrised by a description and families \name|V| and \name|C| of type \name|I → |\verb|List|\name| I → |\verb|Set|.
+%The actual term traversal function can be derived from a given \verb|Semantics| via the function \verb|semantics|.
+The first argument of type
 \begin{code}
 	\>[0]\AgdaKeyword{record}\AgdaSpace{}%
 	\AgdaRecord{Semantics}\AgdaSpace{}%
@@ -721,57 +758,59 @@ The actual term traversal function can be derived from a given \verb|Semantics| 
 	\AgdaPrimitive{Set}\AgdaSymbol{)}\AgdaSpace{}%
 	\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaPrimitive{Set}\<
-	\\[\AgdaEmptyExtraSkip]%
-	\\
-	\>[0]\AgdaPostulate{semantics}%
-	\>[226I]\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{∀}\AgdaSpace{}%
-	\AgdaSymbol{\{}\AgdaBound{V}\AgdaSpace{}%
-	\AgdaBound{C}\AgdaSpace{}%
+\end{code}
+specifies the computation to be performed during the traversal.
+For example, the renaming operation can be provided generically (being parametrised by~\name|d|\/) in the form
+\begin{code}
+	\>[0]\AgdaPostulate{Renaming}\AgdaSpace{}%
 	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaGeneralizable{I}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{List}\AgdaSpace{}%
-	\AgdaGeneralizable{I}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaPrimitive{Set}\AgdaSymbol{\}}\AgdaSpace{}%
-	\AgdaSymbol{\{}\AgdaBound{d}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{d}\AgdaSpace{}%
 	\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaDatatype{Desc}\AgdaSpace{}%
-	\AgdaGeneralizable{I}\AgdaSymbol{\}}\<%
-	\\
-	\>[.][@{}l@{}]\<[226I]%
-	\>[10]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaRecord{Semantics}\AgdaSpace{}%
-	\AgdaBound{d}\AgdaSpace{}%
-	\AgdaBound{V}\AgdaSpace{}%
-	\AgdaBound{C}\<%
-	\\
-	%
-	\>[10]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaGeneralizable{i}\AgdaSpace{}%
-	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaBound{I}\AgdaSymbol{)}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaBound{V}\AgdaSpace{}%
-	\AgdaGeneralizable{i}\AgdaSpace{}%
-	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
-	\\
-	%
-	\>[10]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaRecord{Semantics}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSymbol{)}\<%
+\end{code}
+%with \verb|Var| being values replacing bound variables and \verb|Tm|\name| d| being the computed result.
+with which we can specialise \verb|semantics| to \verb|rename|:
+\begin{code}
+	\>[0]\AgdaFunction{rename}\AgdaSpace{}%
+	\>[1]\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaSymbol{(∀}\AgdaSpace{}%
 	\AgdaSymbol{\{}\AgdaBound{σ}\AgdaSymbol{\}}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Tm}\AgdaSpace{}%
-	\AgdaBound{d}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{σ}\AgdaSpace{}%
 	\AgdaGeneralizable{Γ}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaBound{C}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{σ}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\AgdaSpace{}\<%
+	\\%
+	\>[1]\AgdaSymbol{→}\AgdaSpace{}%	
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaDatatype{STLC}\AgdaSpace{}%
+	\AgdaBound{τ}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaDatatype{STLC}\AgdaSpace{}%
+	\AgdaBound{τ}\AgdaSpace{}%
+	\AgdaGeneralizable{Δ}\<%
+	\\
+	\>[0]\AgdaFunction{rename}\AgdaSpace{}%
+	\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaPostulate{semantics}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaPostulate{Renaming}\AgdaSpace{}%
+	\AgdaDatatype{STLC}\AgdaSymbol{)}\AgdaSpace{}\<%
 \end{code}
-The generic \verb|Semantics| of renaming \verb|Ren| (fig..) can be defined with \verb|Var| being values replacing bound variables and \verb|Tm|\name| d| being the computed result.
+
+\begin{figure}
+\codefigure
 \begin{code}
 	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
@@ -786,7 +825,7 @@ The generic \verb|Semantics| of renaming \verb|Ren| (fig..) can be defined with 
 	\\
 	\>[0][@{}l@{\AgdaIndent{0}}]%
 	\>[2]\AgdaInductiveConstructor{z}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
+	\>[4]\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
 	\AgdaGeneralizable{i}\AgdaSpace{}%
 	\AgdaSymbol{(}\AgdaGeneralizable{i}\AgdaSpace{}%
@@ -795,7 +834,7 @@ The generic \verb|Semantics| of renaming \verb|Ren| (fig..) can be defined with 
 	\\
 	%
 	\>[2]\AgdaInductiveConstructor{s}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
+	\>[4]\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
 	\AgdaGeneralizable{i}\AgdaSpace{}%
 	\AgdaGeneralizable{Γ}\AgdaSpace{}%
@@ -806,129 +845,7 @@ The generic \verb|Semantics| of renaming \verb|Ren| (fig..) can be defined with 
 	\AgdaOperator{\AgdaInductiveConstructor{∷}}\AgdaSpace{}%
 	\AgdaGeneralizable{Γ}\AgdaSymbol{)}\<%
 	\\
-	\\[\AgdaEmptyExtraSkip]%
-	\>[0]\AgdaPostulate{Ren}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaRecord{Semantics}\AgdaSpace{}%
-	\AgdaGeneralizable{d}\AgdaSpace{}%
-	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaDatatype{Tm}\AgdaSpace{}%
-	\AgdaGeneralizable{d}\AgdaSymbol{)}\<%
-\end{code}
-To acquire the \verb|rename| function, one simply applies \verb|semantics| to \verb|Ren|.
-\begin{code}
-\>[0]\AgdaFunction{rename}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaDatatype{Var}\AgdaSpace{}%
-\AgdaGeneralizable{i}\AgdaSpace{}%
-\AgdaGeneralizable{Γ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Var}\AgdaSpace{}%
-\AgdaGeneralizable{i}\AgdaSpace{}%
-\AgdaGeneralizable{Δ}\AgdaSymbol{)}\AgdaSpace{}
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Tm}\AgdaSpace{}%
-\AgdaBound{d}\AgdaSpace{}%
-\AgdaBound{σ}\AgdaSpace{}%
-\AgdaGeneralizable{Γ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Tm}\AgdaSpace{}%
-\AgdaBound{d}\AgdaSpace{}%
-\AgdaBound{σ}\AgdaSpace{}%
-\AgdaGeneralizable{Δ}\<%
-\\
-\>[0]\AgdaFunction{rename}\AgdaSpace{}%
-\AgdaBound{ρ}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaPostulate{semantics}\AgdaSpace{}%
-\AgdaPostulate{Ren}\AgdaSpace{}%
-\AgdaBound{ρ}\AgdaSpace{}%
-\AgdaBound{t}\<%
-\end{code}
-\verb|rename| is polymorphic so it is directly applicable to terms of \verb|STLC|, as the fixed point \verb|Tm|\name| d| will be instantiated to \verb|Tm STLC|. 
-
-
-\section{Reifying Syntax-Generic Operations}
-\label{sec:demo}
-We have argued the benefits of native functions instead of those defined on a syntax universe in \cref{sec:intro}.
-Therefore, we redefine constructions in \cref{sec:recap} such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
-\verb|Semantics| and generic programs like \verb|Ren| in \cref{sec:recap} will be redefined in this section and have different types from their counterparts, despite playing similar roles.
-We no longer need fixed points \verb|Tm| and \verb|semantics| which instantiates generic functions to \verb|Tm|.
-
-We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
-
-Take a DSL programmer who works on the datatype of syntax \verb|Lam| for example.
-Traditionally, they would manually define a \verb|rename| function, as well as other syntax operations such as substitution, printer, or scope checker.
-\begin{code}
-	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaDatatype{Type}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{List}\AgdaSpace{}%
-	\AgdaDatatype{Type}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaPrimitive{Set}\AgdaSpace{}%
-	\AgdaKeyword{where}\<%
-	\\
-	\>[0][@{}l@{\AgdaIndent{0}}]%
-	\>[2]\AgdaInductiveConstructor{‵var}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{∀}\AgdaSpace{}%
-	\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSymbol{\}}%
-	\>[19]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaBound{Γ}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaBound{Γ}\<%
-	\\
 	%
-	\>[2]\AgdaInductiveConstructor{‵app}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{∀}\AgdaSpace{}%
-	\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaBound{τ}\AgdaSymbol{\}}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
-	\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaBound{Γ}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaBound{Γ}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaBound{τ}\AgdaSpace{}%
-	\AgdaBound{Γ}\<%
-	\\
-	%
-	\>[2]\AgdaInductiveConstructor{‵lam}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{∀}\AgdaSpace{}%
-	\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-	\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaBound{τ}\AgdaSymbol{\}}\AgdaSpace{}%
-	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaBound{τ}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaOperator{\AgdaInductiveConstructor{∷}}\AgdaSpace{}%
-	\AgdaBound{Γ}\AgdaSymbol{)}%
-	\>[36]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
-	\AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
-	\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaBound{Γ}\<%
-	\\
 	\\[\AgdaEmptyExtraSkip]%
 	\>[0]\AgdaFunction{extend}%
 	\>[274I]\AgdaSymbol{:}\AgdaSpace{}%
@@ -946,95 +863,188 @@ Traditionally, they would manually define a \verb|rename| function, as well as o
 	\>[.][@{}l@{}]\<[274I]%
 	\>[7]\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaGeneralizable{i}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaGeneralizable{k}\AgdaSpace{}%
 	\AgdaOperator{\AgdaInductiveConstructor{∷}}\AgdaSpace{}%
 	\AgdaGeneralizable{Γ}\AgdaSymbol{)}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaGeneralizable{i}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaGeneralizable{k}\AgdaSpace{}%
 	\AgdaOperator{\AgdaInductiveConstructor{∷}}\AgdaSpace{}%
 	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
 	\\
 	\>[0]\AgdaFunction{extend}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaInductiveConstructor{z}\AgdaSpace{}%
-	\AgdaSymbol{=}\AgdaSpace{}%
+	\>[8]\AgdaSymbol{=}\AgdaSpace{}%
 	\AgdaInductiveConstructor{z}\<%
 	\\
 	\>[0]\AgdaFunction{extend}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaSymbol{(}\AgdaInductiveConstructor{s}\AgdaSpace{}%
 	\AgdaBound{v}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaSymbol{=}\AgdaSpace{}%
+	\>[8]\AgdaSymbol{=}\AgdaSpace{}%
 	\AgdaInductiveConstructor{s}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{f}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaBound{v}\AgdaSymbol{)}\<%
+\end{code}
+\caption{Well scoped and typed de Bruijn indices}
+\label{fig:de-Bruijn-indices}
+\end{figure}
+
+\begin{figure}
+\codefigure
+\begin{code}
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{Type}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{α}\AgdaSpace{}%
+	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Type}\<%
+	\\
+	%
+	\>[2]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}‵→\AgdaUnderscore{}}}\AgdaSpace{}%
+	\>[5]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Type}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Type}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Type}\<%
+	\\
+	%
+	\\[\AgdaEmptyExtraSkip]%
+	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Type}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{List}\AgdaSpace{}%
+	\AgdaDatatype{Type}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaPrimitive{Set}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{var}\AgdaSpace{}%
+	\>[3]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaBound{Γ}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{app}\AgdaSpace{}%
+	\>[3]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
+	\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaBound{τ}\AgdaSpace{}%
+	\AgdaBound{Γ}\<%
+	\\
+	%
+	\>[2]\AgdaInductiveConstructor{lam}\AgdaSpace{}%
+	\>[3]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaBound{τ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaInductiveConstructor{∷}}\AgdaSpace{}%
+	\AgdaBound{Γ}\AgdaSymbol{)}%
+	\>[36]\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Lam}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{σ}\AgdaSpace{}%
+	\AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
+	\AgdaBound{τ}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaBound{Γ}\<%
 	\\
 	%
 	\\[\AgdaEmptyExtraSkip]%
 	\>[0]\AgdaFunction{rename}%
 	\>[307I]\AgdaSymbol{:}\AgdaSpace{}%
 	\AgdaSymbol{(∀}\AgdaSpace{}%
-	\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
+	\AgdaSymbol{\{}\AgdaBound{σ}\AgdaSymbol{\}}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
 	\AgdaGeneralizable{Γ}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaBound{i}\AgdaSpace{}%
+	\AgdaBound{σ}\AgdaSpace{}%
 	\AgdaGeneralizable{Δ}\AgdaSymbol{)}\<%
 	\\
 	\>[.][@{}l@{}]\<[307I]%
 	\>[7]\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaGeneralizable{τ}\AgdaSpace{}%
 	\AgdaGeneralizable{Γ}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
 	\AgdaDatatype{Lam}\AgdaSpace{}%
-	\AgdaGeneralizable{j}\AgdaSpace{}%
+	\AgdaGeneralizable{τ}\AgdaSpace{}%
 	\AgdaGeneralizable{Δ}\<%
 	\\
 	\>[0]\AgdaFunction{rename}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaInductiveConstructor{‵var}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{var}\AgdaSpace{}%
 	\AgdaBound{x}\AgdaSymbol{)}%
 	\>[20]\AgdaSymbol{=}\AgdaSpace{}%
-	\AgdaInductiveConstructor{‵var}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{f}\AgdaSpace{}%
+	\AgdaInductiveConstructor{var}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaBound{x}\AgdaSymbol{)}\<%
 	\\
 	\>[0]\AgdaFunction{rename}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaInductiveConstructor{‵app}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{app}\AgdaSpace{}%
 	\AgdaBound{x}\AgdaSpace{}%
 	\AgdaBound{y}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaSymbol{=}\AgdaSpace{}%
-	\AgdaInductiveConstructor{‵app}\AgdaSpace{}%
+	\>[20]\AgdaSymbol{=}\AgdaSpace{}%
+	\AgdaInductiveConstructor{app}\AgdaSpace{}%
 	\AgdaSymbol{(}\AgdaFunction{rename}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
 	\AgdaSymbol{(}\AgdaFunction{rename}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
 	\AgdaBound{y}\AgdaSymbol{)}\<%
 	\\
 	\>[0]\AgdaFunction{rename}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaInductiveConstructor{‵lam}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaInductiveConstructor{lam}\AgdaSpace{}%
 	\AgdaBound{x}\AgdaSymbol{)}%
 	\>[20]\AgdaSymbol{=}\AgdaSpace{}%
-	\AgdaInductiveConstructor{‵lam}\AgdaSpace{}%
+	\AgdaInductiveConstructor{lam}\AgdaSpace{}%
 	\AgdaSymbol{(}\AgdaFunction{rename}\AgdaSpace{}%
 	\AgdaSymbol{(}\AgdaFunction{extend}\AgdaSpace{}%
-	\AgdaBound{f}\AgdaSymbol{)}\AgdaSpace{}%
+	\AgdaBound{ρ}\AgdaSymbol{)}\AgdaSpace{}%
 	\AgdaBound{x}\AgdaSymbol{)}\<%
 \end{code}
-We show that these operations can be generated at once and the programmers need not redefine them for every new syntax.
-More specifically, the \verb|rename| function generated by our utilities will be definitionally equivalent to the one the programmer manually defined.
+\caption{Simply typed $\lambda$-calculus and renaming}
+\label{fig:native-renaming}
+\end{figure}
 
-The DSL programmer needs to provide a proof \verb|LamSyntax|\name| : |\verb|Syntax LamD| where \verb|LamD| is the datatype description of \verb|Lam|. 
+\section{Reifying Syntax-Generic Operations}
+\label{sec:demo}
+We have argued the benefits of native functions instead of those defined on a syntax universe in \cref{sec:intro}.
+Therefore, we redefine constructions in \cref{sec:recap} such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
+\verb|Semantics| and generic programs like \verb|Ren| in \cref{sec:recap} will be redefined in this section and have different types from their counterparts, despite playing similar roles.
+We no longer need fixed points \verb|Tm| and \verb|semantics| which instantiates generic functions to \verb|Tm|.
+
+We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
+
+The DSL programmer needs to provide a proof \verb|LamSyn|\name| : |\verb|Syntax LamD| where \verb|LamD| is the datatype description of \verb|Lam|. 
 Ko et al. have provided a macro \macro|genDataD| that generates from a native datatype its description of type \verb|DataD|.
 \begin{code}
 	\>[0]\AgdaFunction{LamD}\AgdaSpace{}%
@@ -1044,72 +1054,23 @@ Ko et al. have provided a macro \macro|genDataD| that generates from a native da
 \end{code}
 %This means that the programmer needs to have a basic understanding of \verb|DataD|. \todo{Discussion? DataD closely resemble native datatype definition in Agda.}
 %More specifically, the core part of \verb|DataD|, \verb|ConDs| is a list in which each \verb|ConD| represents a constructor.
-Now the programmer get to choose what generic syntax operation they want to instantiate.
-For example, our library provides \verb|Renaming| that generates a \verb|Semantics| from a \name|D : |\verb|DataD| and its \verb|Syntax|\name| D|. 
+Now the programmer gets to choose what generic syntax operation they want to instantiate.
+For example, our library provides \verb|Renaming| that generates a \verb|Semantics| from a \name|d : |\verb|DataD|\todo{simplified}\ and its \verb|Syntax|\name| d|.
 \begin{code}
-	\>[2]\AgdaPostulate{Renaming}%
-	\>[296I]\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaRecord{DataD}\AgdaSymbol{)}\<%
-	\\
-	\>[.][@{}l@{}]\<[296I]%
-	\>[11]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{Sy}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaPostulate{Syntax}\AgdaSpace{}%
-	\AgdaBound{D}\AgdaSymbol{)}\<%
-	\\
-	%
-	\>[11]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaRecord{Semantics}\AgdaSpace{}%
-	\AgdaBound{D}\AgdaSpace{}%
-	\AgdaBound{Sy}\AgdaSpace{}%
-	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\<%
-	\\
-	\\[\AgdaEmptyExtraSkip]%
-	\>[0]\AgdaFunction{LamSemantics}\AgdaSpace{}%
+	\>[0]\AgdaFunction{LamRen}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
 	\AgdaPostulate{Renaming}\AgdaSpace{}%
 	\AgdaFunction{LamD}\AgdaSpace{}%
-	\AgdaPostulate{LamSyntax}\<%
+	\AgdaPostulate{LamSyn}\<%
 \end{code}
 We also provide a function \verb|SemP| that takes a datatype description, its proof of being syntax, and the \verb|Semantics| we just generated, then generates an instance of \verb|FoldP|.
 \begin{code}
-	\>[2]\AgdaPostulate{SemP}%
-	\>[309I]\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{D}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaRecord{DataD}\AgdaSymbol{)}\<%
-	\\
-	\>[.][@{}l@{}]\<[309I]%
-	\>[7]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaBound{Sy}\AgdaSpace{}%
-	\AgdaSymbol{:}\AgdaSpace{}%
-	\AgdaPostulate{Syntax}\AgdaSpace{}%
-	\AgdaBound{D}\AgdaSymbol{)}\<%
-	\\
-	%
-	\>[7]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaRecord{Semantics}\AgdaSpace{}%
-	\AgdaBound{D}\AgdaSpace{}%
-	\AgdaBound{Sy}\AgdaSpace{}%
-	\AgdaDatatype{Var}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\<%
-	\\
-	%
-	\>[7]\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaRecord{FoldP}\<%
-	\\
-	\\[\AgdaEmptyExtraSkip]%
-	\>[0]\AgdaFunction{RenameP}\AgdaSpace{}%
+	\>[0]\AgdaFunction{LamRenP}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
 	\AgdaPostulate{SemP}\AgdaSpace{}%
-	\AgdaSymbol{(}\AgdaMacro{genDataD}\AgdaSpace{}%
-	\AgdaDatatype{Lam}\AgdaSymbol{)}\AgdaSpace{}%
-	\AgdaPostulate{LamSyntax}\AgdaSpace{}%
-	\AgdaFunction{LamSemantics}\<%
+	\AgdaDatatype{LamD}\AgdaSpace{}%
+	\AgdaPostulate{LamSyn}\AgdaSpace{}%
+	\AgdaFunction{LamRen}\<%
 \end{code}
 \verb|FoldP| and the metaprogram \verb|defineFold| are given by Ko et al., the former is the description of generic fold operations, and the latter instantiate them to native fold functions.
 \begin{code}
@@ -1117,7 +1078,7 @@ We also provide a function \verb|SemP| that takes a datatype description, its pr
 	\AgdaDatatype{rename}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
 	\AgdaFunction{defineFold}\AgdaSpace{}%
-	\AgdaFunction{RenameP}\AgdaSpace{}%
+	\AgdaFunction{LamRenP}\AgdaSpace{}%
 	\AgdaDatatype{rename}\<%
 \end{code}
 \AgdaKeyword{unquoteDecl} is a built-in primitive provided by Agda that defines a given name, in this case \verb|rename|, by a metaprogram.
@@ -1134,7 +1095,7 @@ Delightfully they will find these operations are reified as native functions, cl
 
 \begin{figure}
 	\centering
-	\fbox{\includegraphics[width=\columnwidth]{Diagram}}
+	\fbox{\includegraphics[width=.97\columnwidth]{Diagram}}
 	\caption{An illustration of how a DSL programmer interact with our library and metaprograms by Ko et al.}
 	\label{fig:flow}
 \end{figure}
@@ -1434,7 +1395,7 @@ While it is conceivable that the universe can be gradually expanded to encode mo
 If the intended users include programming language researchers, who invent new features that are unlikely to be covered by existing libraries, then libraries targeting a fixed universe of syntaxes may not be too useful.
 Here are some possible scenarios where syntax-generic libraries might help:
 Users might start with a standard syntax definition and then extend it with new features; this is currently more or less supported by our framework, which allows definitions to be printed (rather than unquoted) and then copied and pasted into the users' files.
-Or, exploiting Agda's interactive capabilities, we could generate partial definitions with holes,  although there is still the problem of where the holes should appear, which is perhaps no less difficult than the problem of composing syntaxes/type theories~\citep{Delaware-meta-theory-a-la-carte,Forster-Coq-a-la-carte}, on which much work is still needed.
+Or, exploiting Agda's interactive capabilities, we could generate partial definitions with holes,  although there is still the problem of where the holes should appear, which is perhaps no less difficult than the problem of composing syntaxes or type theories~\citep{Delaware-meta-theory-a-la-carte,Forster-Coq-a-la-carte}, on which much work is still needed.
 \end{itemize}
 
 %%
