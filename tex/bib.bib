@@ -1,12 +1,25 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% http://bibdesk.sourceforge.net/
 
-%% Created for Josh Ko at 2022-06-02 16:03:58 +0800 
+%% Created for Josh Ko at 2022-06-02 18:39:31 +0800 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@inproceedings{Pickering-staged-SoP,
+	abstract = {Generic programming libraries have historically traded efficiency in return for convenience, and the \textsf{generics-sop} library is no exception. It offers a simple, uniform, representation of all datatypes precisely as a sum of products, making it easy to write generic functions. We show how to finally make \textsf{generics-sop} fast through the use of staging with Typed Template Haskell.},
+	author = {Pickering, Matthew and L{\"o}h, Andres and Wu, Nicolas},
+	booktitle = {International Symposium on Haskell},
+	date-added = {2022-06-02 18:24:56 +0800},
+	date-modified = {2022-06-02 18:24:56 +0800},
+	doi = {10.1145/3406088.3409021},
+	pages = {122-135},
+	publisher = {ACM},
+	title = {Staged Sums of Products},
+	year = {2020},
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCTLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L1BpY2tlcmluZyBldCBhbCAyMDIwIC0gU3RhZ2VkIFN1bXMgb2YgUHJvZHVjdHMucGRmTxECZgAAAAACZgACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H1BpY2tlcmluZyBldCBhbCAyMCNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAJYvOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6UGlja2VyaW5nIGV0IGFsIDIwMjAgLSBTdGFnZWQgU3VtcyBvZiBQcm9kdWN0cy5wZGYADgBmADIAUABpAGMAawBlAHIAaQBuAGcAIABlAHQAIABhAGwAIAAyADAAMgAwACAALQAgAFMAdABhAGcAZQBkACAAUwB1AG0AcwAgAG8AZgAgAFAAcgBvAGQAdQBjAHQAcwAuAHAAZABmAA8ADgAGAFMAeQBzAHQAZQBtABIAlFVzZXJzL2pvc2hrby9MaWJyYXJ5L01vYmlsZSBEb2N1bWVudHMvSkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXIvRG9jdW1lbnRzL0JpYlJlcG9zaXRvcnkvUGlja2VyaW5nIGV0IGFsIDIwMjAgLSBTdGFnZWQgU3VtcyBvZiBQcm9kdWN0cy5wZGYAEwABLwAAFQACAA3//wAAAAgADQAaACQAugAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAMk}}
 
 @inproceedings{Filinski-semantic-partial-evaluation,
 	abstract = {We formally characterize partial evaluation of functional programs as a normalization problem in an equational theory, and derive a type-based normalization-by-evaluation algorithm for computing normal forms in this setting. We then establish the correctness of this algorithm using a semantic argument based on Kripke logical relations. For simplicity, the results are stated for a non-strict, purely functional language; but the methods are directly applicable to stating and proving correctness of type-directed partial evaluation in ML-like languages as well.},
@@ -75,8 +88,8 @@ Several interesting language features, including binders and general recursion, 
 	abstract = {Datatype-generic programming is natural and useful in dependently typed languages such as Agda. However, datatype-generic libraries in Agda are not reused as much as they should be, because traditionally they work only on datatypes decoded from a library's own version of datatype descriptions; this means that different generic libraries cannot be used together, and they do not work on native datatypes, which are preferred by the practical Agda programmer for better language support and access to other libraries. This paper presents a framework using Agda's elaborator reflection to instantiate datatype-generic programs as, and for, a useful range of native datatypes and functions ---including universe-polymorphic ones--- in programmer-friendly and customisable forms. Thanks to the power of elaborator reflection, generic programs do not need to be drastically rewritten compared to their traditional forms, making it easy to adapt existing generic libraries and develop new ones. We expect that datatype-generic libraries built with our framework ---being interoperable with native entities--- will finally be suitable for the toolbox of the practical Agda programmer.},
 	author = {Ko, Hsiang-Shang and Chen, Liang-Ting and Lin, Tzu-Chi},
 	date-added = {2022-03-13 16:23:52 +0800},
-	date-modified = {2022-05-27 15:42:04 +0800},
-	howpublished = {Conditionally accepted for the \textit{International Conference on Functional Programming} (ICFP) 2022},
+	date-modified = {2022-06-02 18:38:59 +0800},
+	howpublished = {Conditionally accepted for the \textit{International Conference on Functional Programming (ICFP)}},
 	title = {Datatype-Generic Programming Meets Elaborator Reflection},
 	url = {https://github.com/Zekt/Type-Embellishment/raw/master/tex/ICFP22/NDGP.pdf},
 	year = {2022},
@@ -131,9 +144,9 @@ The main result of our work is a general construction that, when fed with a sign
 @misc{Kokke-PLFA,
 	author = {Kokke, Wen and Wadler, Philip and Siek, Jeremy G.},
 	date-added = {2020-04-27 14:44:51 +0800},
-	date-modified = {2020-08-31 17:21:24 +0800},
-	title = {Programming Language Foundations in {Agda} (Version 20.07)},
-	url = {http://plfa.inf.ed.ac.uk/20.07/},
+	date-modified = {2022-06-02 18:39:31 +0800},
+	title = {Programming Language Foundations in {Agda}},
+	url = {http://plfa.inf.ed.ac.uk},
 	year = {2020},
 	bdsk-url-1 = {https://plfa.github.io}}
 

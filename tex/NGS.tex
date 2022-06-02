@@ -551,7 +551,7 @@ Then the programmers would go on and define operations on \verb|Lam| (renaming, 
 One simplest example is the \verb|rename| function in \cref{fig:native-renaming}, which takes an environment~\name|ρ| represented as a function mapping variables in~\name|Γ|\/ to variables in~\name|Δ|, and applies~\name|ρ| to all the variables in a term of type \verb|Lam|.
 Among the cases of \verb|rename|, the \AgdaInductiveConstructor{lam} case is more interesting: as \name|ρ|~is pushed under the binder, it needs to be extended with a case mapping the new variable \AgdaInductiveConstructor{z} to `itself' (since we are renaming only free variables, whereas the new variable is bound), and the old variables in~\name|ρ| should be incremented to skip over the binder; this new environment for renaming the body is computed by \verb|extend| in \cref{fig:de-Bruijn-indices}.
 
-\citeauthor{Allais-generic-syntax} show that operations like \verb|rename| can be implemented generically for a family of syntaxes, and programmers need not re-define them for every new syntax as long as the syntax has a `description', which is an inhabitant of
+\citeauthor{Allais-generic-syntax} show that operations like \verb|rename| can be implemented generically for a family of syntaxes, and programmers need not redefine them for every new syntax as long as the syntax has a `description', which is an inhabitant of
 \begin{code}
 	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
 	\AgdaDatatype{Desc}\AgdaSpace{}%
@@ -1073,7 +1073,7 @@ with which we can specialise \verb|semantics| to \verb|rename|:
 \label{sec:demo}
 
 It is not particularly pleasant to program with \verb|Tm STLC| and \verb|rename| defined in terms of \verb|semantics| from \cref{sec:recap}, because the (implementation) details of the generic library would keep showing up in these definitions, complicating subsequent constructions.
-Our approach is to regard the generic entities as residing at a meta-level, and use metaprograms to perform partial evaluation and generate, at a different level, code specialised for specific syntaxes/datatypes such as \verb|Lam|.
+Our approach is to regard the generic entities as residing at a `meta-level', and use metaprograms to perform partial evaluation and generate, at a different level, code specialised for specific syntaxes/datatypes such as \verb|Lam|.
 This process is conceptually straightforward in Agda, because in functional settings, partial evaluation is just normalisation~\citep{Filinski-semantic-partial-evaluation}, which is directly supported by Agda's elaborator reflection.
 
 To demonstrate, we have adapted \verb|Semantics|, \verb|semantics|, and \verb|Renaming| in \cref{sec:recap} to our framework, enabling programmers to write \verb|Lam| and then derive \verb|rename| for \verb|Lam|.
@@ -1091,7 +1091,7 @@ Somewhat unsatisfactorily, currently DSL programmers still need to understand \v
 \>\AgdaFunction{LamSyn}\AgdaSpace{}\AgdaSymbol{:}\AgdaSpace{}\AgdaFunction{Syntax}\AgdaSpace{}\AgdaFunction{LamD}\<
 \end{code}
 The predicate \verb|Syntax| holds for \name|d| \AgdaSymbol{:} \verb|DataD| essentially when there exists a \verb|Desc| that translates to~\name|d|.
-(For other kind of generic libraries, similar predicates may be defined more directly on the structure of \verb|DataD|.)
+(For other kinds of generic libraries, similar predicates may be defined more directly on the structure of \verb|DataD|.)
 
 %Such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
 
@@ -1108,7 +1108,7 @@ Now programmers can apply \verb|Renaming| to both \verb|LamD| and \verb|LamSyn| 
 	\AgdaFunction{LamD}\AgdaSpace{}%
 	\AgdaPostulate{LamSyn}\<%
 \end{code}
-\citeauthor{Allais-generic-syntax}'s \verb|semantics| function is replaced by \verb|SemP|, which compute `fold programs' of type \verb|FoldP| from a \verb|Semantics|:
+\citeauthor{Allais-generic-syntax}'s \verb|semantics| function is replaced by \verb|SemP|, which computes `fold programs' of type \verb|FoldP| from a \verb|Semantics|:
 \begin{code}
 	\>[0]\AgdaFunction{LamRenP}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
@@ -1117,7 +1117,7 @@ Now programmers can apply \verb|Renaming| to both \verb|LamD| and \verb|LamSyn| 
 	\AgdaPostulate{LamSyn}\AgdaSpace{}%
 	\AgdaFunction{LamRen}\<%
 \end{code}
-Unlike \verb|semantics|, fold programs themselves are not executable, but can be reified as native functions by a metaprogram \verb|defineFold| in conjunction with \AgdaKeyword{unquoteDecl}, a built-in primitive that defines a given name (in this case \verb|rename|):
+Unlike \verb|semantics|, fold programs themselves are not executable, but can be reified as native functions by a metaprogram \verb|defineFold| in conjunction with \AgdaKeyword{unquoteDecl}, an Agda primitive that defines a given name (in this case \verb|rename|):
 \begin{code}
 	\>[0]\AgdaKeyword{unquoteDecl}\AgdaSpace{}%
 	\AgdaDatatype{rename}\AgdaSpace{}%
@@ -1127,7 +1127,7 @@ Unlike \verb|semantics|, fold programs themselves are not executable, but can be
 	\AgdaDatatype{rename}\<%
 \end{code}
 This \verb|rename| function has a definition close to the one in \cref{fig:native-renaming}, and can be used just like manually defined functions.
-Note that the generic entities \verb|LamD|, \verb|LamSyn|, \verb|LamRen|, and \verb|LamRenP| are just `meta-level' artefacts for deriving \verb|rename|, and do not interfere with the subsequent development.
+Notably, the generic entities \verb|LamD|, \verb|LamSyn|, \verb|LamRen|, and \verb|LamRenP| are just `meta-level' artefacts for deriving \verb|rename|, and do not interfere with the subsequent development.
 
 %Generated functions are scope- and type-checked, which means here a \verb|rename| function is immediately usable by the programmer.
 
@@ -1436,19 +1436,20 @@ Currently our framework is implemented in Agda, but the essential idea depends o
 %This work is still in progress and admits of rethinks and redesign.
 
 The reported experiment is small but already reveals some limitations of our framework and of \citeauthor{Allais-generic-syntax}'s library.
-By drawing attention to these limitations, we hope to illuminate some possible future directions for the development of (syntax-) generic libraries.
-\begin{itemize}[leftmargin=*]
-\item For the framework:
+By discussing these limitations, we hope to illuminate some possible directions for developing (syntax-) generic libraries.
+
+For the framework:
 It is not so convenient having to carefully apply generic programs to the right arguments and reifying them one at a time --- there should be a better user interface (which may require significant changes to Agda's design though).
 Proofs that \verb|DataD| descriptions satisfy \verb|Syntax| are straightforward but tedious, and should be automated, probably also with elaborator reflection.
-\item As for \citeauthor{Allais-generic-syntax}'s library and syntax-generic libraries in general:
-Currently the largest-scale development done with \citeauthor{Allais-generic-syntax}'s library seems to be a strong normalisation proof for simply typed $\lambda$-calculus with disjoint sums~\citep[Section~4.3]{Abel-POPLMark-reloaded}, whose features are standard.
-While it is conceivable that the universe can be gradually expanded to encode more datatypes, the DSL features covered will always be predetermined when defining the universe.
+And it may be beneficial to introduce stages explicitly into the framework, for example to reason about the `cleanness' of generated code~\citep[Section~4.1]{Pickering-staged-SoP}.
+
+For syntax-generic libraries:
+Currently the largest development done with \citeauthor{Allais-generic-syntax}'s library seems to be a strong normalisation proof for simply typed $\lambda$-calculus with disjoint sums~\citep[Section~4.3]{Abel-POPLMark-reloaded}, whose features are standard.
+While it is conceivable that the universe can be expanded to encode more datatypes, the DSL features covered will always be predetermined when defining the universe.
 If the intended users include programming language researchers, who invent new features that are unlikely to be covered by existing libraries, then libraries targeting a fixed universe of syntaxes may not be too useful.
 Here are some possible scenarios where syntax-generic libraries might help:
 Users might start with a standard syntax definition and then modify it to accommodate new features; this is currently supported by our framework, which allows definitions to be printed (rather than unquoted) and then copied and pasted into the users' files.
 Or, exploiting Agda's interactive capabilities, we could generate partial definitions with holes,  although there is still the problem of where the holes should appear, which is perhaps no less difficult than the problem of composing syntaxes or type theories~\citep{Delaware-meta-theory-a-la-carte,Forster-Coq-a-la-carte}, on which much work is still needed.
-\end{itemize}
 
 %%
 %% The acknowledgments section is defined using the "acks" environment
