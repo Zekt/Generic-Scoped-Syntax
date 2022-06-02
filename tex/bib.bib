@@ -1,12 +1,41 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% http://bibdesk.sourceforge.net/
 
-%% Created for Josh Ko at 2022-05-30 06:11:13 +0800 
+%% Created for Josh Ko at 2022-06-02 16:03:58 +0800 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@inproceedings{Filinski-semantic-partial-evaluation,
+	abstract = {We formally characterize partial evaluation of functional programs as a normalization problem in an equational theory, and derive a type-based normalization-by-evaluation algorithm for computing normal forms in this setting. We then establish the correctness of this algorithm using a semantic argument based on Kripke logical relations. For simplicity, the results are stated for a non-strict, purely functional language; but the methods are directly applicable to stating and proving correctness of type-directed partial evaluation in ML-like languages as well.},
+	author = {Filinski, Andrzej},
+	booktitle = {International Conference on Principles and Practice of Declarative Programming (PPDP)},
+	date-added = {2022-06-02 16:03:58 +0800},
+	date-modified = {2022-06-02 16:03:58 +0800},
+	doi = {10.1007/10704567_23},
+	pages = {378--395},
+	publisher = {Springer},
+	series = {Lecture Notes in Computer Science},
+	title = {A Semantic Account of Type-Directed Partial Evaluation},
+	year = 1999,
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCrLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0ZpbGluc2tpIDE5OTkgLSBBIFNlbWFudGljIEFjY291bnQgb2YgVHlwZS1EaXJlY3RlZCBQYXJ0aWFsIEV2YWx1YXRpb24ucGRmTxECxgAAAAACxgACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0ZpbGluc2tpIDE5OTkgLSBBICNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAK4vOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6RmlsaW5za2kgMTk5OSAtIEEgU2VtYW50aWMgQWNjb3VudCBvZiBUeXBlLURpcmVjdGVkIFBhcnRpYWwgRXZhbHVhdGlvbi5wZGYADgCWAEoARgBpAGwAaQBuAHMAawBpACAAMQA5ADkAOQAgAC0AIABBACAAUwBlAG0AYQBuAHQAaQBjACAAQQBjAGMAbwB1AG4AdAAgAG8AZgAgAFQAeQBwAGUALQBEAGkAcgBlAGMAdABlAGQAIABQAGEAcgB0AGkAYQBsACAARQB2AGEAbAB1AGEAdABpAG8AbgAuAHAAZABmAA8ADgAGAFMAeQBzAHQAZQBtABIArFVzZXJzL2pvc2hrby9MaWJyYXJ5L01vYmlsZSBEb2N1bWVudHMvSkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXIvRG9jdW1lbnRzL0JpYlJlcG9zaXRvcnkvRmlsaW5za2kgMTk5OSAtIEEgU2VtYW50aWMgQWNjb3VudCBvZiBUeXBlLURpcmVjdGVkIFBhcnRpYWwgRXZhbHVhdGlvbi5wZGYAEwABLwAAFQACAA3//wAAAAgADQAaACQA0gAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAOc}}
+
+@inproceedings{Pickering-pattern-synonyms,
+	abstract = {Pattern matching has proven to be a convenient, expressive way of inspecting data. Yet this language feature, in its traditional form, is limited: patterns must be data constructors of concrete data types. No computation or abstraction is allowed. The data type in question must be concrete, with no ability to enforce any invariants. Any change in this data type requires all clients to update their code.\par
+
+This paper introduces \emph{pattern synonyms}, which allow programmers to abstract over patterns, painting over all the shortcomings listed above. Pattern synonyms are assigned types, enabling a compiler to check the validity of a synonym independent of its definition. These types are intricate; detailing how to assign a type to a pattern synonym is a key contribution of this work. We have implemented pattern synonyms in the Glasgow Haskell Compiler, where they have enjoyed immediate popularity, but we believe this feature could easily be exported to other languages that support pattern matching.},
+	author = {Pickering, Matthew and {\'E}rdi, Gergo Gerg{\H o} and Peyton Jones, Simon and Eisenberg, Richard A.},
+	booktitle = {International Symposium on Haskell},
+	date-added = {2022-06-02 15:23:09 +0800},
+	date-modified = {2022-06-02 15:23:09 +0800},
+	doi = {10.1145/2976002.2976013},
+	pages = {80--91},
+	publisher = {ACM},
+	title = {Pattern Synonyms},
+	year = 2016,
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCMLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L1BpY2tlcmluZyBldCBhbCAyMDE2IC0gUGF0dGVybiBTeW5vbnltcy5wZGZPEQJMAAAAAAJMAAIAAAZTeXN0ZW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQkQAAf////8fUGlja2VyaW5nIGV0IGFsIDIwI0ZGRkZGRkZGLnBkZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAAAEAAYAAAogY3UAAAAAAAAAAAAAAAAADUJpYlJlcG9zaXRvcnkAAAIAjy86VXNlcnM6am9zaGtvOkxpYnJhcnk6TW9iaWxlIERvY3VtZW50czpKRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlcjpEb2N1bWVudHM6QmliUmVwb3NpdG9yeTpQaWNrZXJpbmcgZXQgYWwgMjAxNiAtIFBhdHRlcm4gU3lub255bXMucGRmAAAOAFgAKwBQAGkAYwBrAGUAcgBpAG4AZwAgAGUAdAAgAGEAbAAgADIAMAAxADYAIAAtACAAUABhAHQAdABlAHIAbgAgAFMAeQBuAG8AbgB5AG0AcwAuAHAAZABmAA8ADgAGAFMAeQBzAHQAZQBtABIAjVVzZXJzL2pvc2hrby9MaWJyYXJ5L01vYmlsZSBEb2N1bWVudHMvSkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXIvRG9jdW1lbnRzL0JpYlJlcG9zaXRvcnkvUGlja2VyaW5nIGV0IGFsIDIwMTYgLSBQYXR0ZXJuIFN5bm9ueW1zLnBkZgAAEwABLwAAFQACAA3//wAAAAgADQAaACQAswAAAAAAAAIBAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAMD}}
 
 @inproceedings{Forster-Coq-a-la-carte,
 	abstract = {The mechanisation of the meta-theory of programming languages is still considered hard and requires considerable effort. When formalising properties of the extension of a language, one hence wants to reuse definitions and proofs. But type-theoretic proof assistants use inductive types and predicates to formalise syntax and type systems, and these definitions are closed to extensions. Available approaches for modular syntax are either inapplicable to type theory or add a layer of indirectness by requiring complicated encodings of types.\par

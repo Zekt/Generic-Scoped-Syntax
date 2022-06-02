@@ -66,7 +66,7 @@
 \usepackage[inline]{enumitem} % for environment enumerate*
 
 \captionsetup{aboveskip=1.5ex minus .5ex,belowskip=-1.5ex minus .5ex}
-\newcommand{\codefigure}{\normalsize\setlength{\mathindent}{0em}\setlength{\abovedisplayskip}{0ex}\setlength{\belowdisplayskip}{0ex}\noindent}
+\newcommand{\codefigure}{\small\setlength{\mathindent}{0em}\setlength{\abovedisplayskip}{0ex}\setlength{\belowdisplayskip}{0ex}\noindent}
 
 \newcommand{\arXiv}[1]{\href{http://arxiv.org/abs/#1}{arXiv:\nolinkurl{#1}}}
 
@@ -503,7 +503,7 @@ We will focus on \varcitet{Allais-generic-syntax}{'s} Agda library, which treats
 %in the sense that syntaxes are typically defined as datatypes.
 Their approach (recapped in \cref{sec:recap}) is more or less standard in Agda:
 The syntax of a DSL is specified as a `description' \name|d |\verb|: Desc |\name|I|\/ (where \name|I|\/~is the set of the DSL types), from which a datatype \verb|Tm |\name|d|\/ of syntax trees is derived.
-There is a \verb|semantics| operator that traverses the syntax trees to compute a result; the operator is parametrised by a \verb|Semantics| record, which specifies what computation to perform.
+There is a \verb|semantics| operator that traverses a syntax tree to compute a result; the operator is parametrised by a \verb|Semantics| record, which specifies what computation to perform.
 The library provides various \verb|Semantics| parametrised by~\name|d|, which act as syntax-generic programs, and can be instantiated with \verb|semantics| as operations on syntax trees of DSLs that can be described within the \verb|Desc| universe.
 
 One potential problem that may prevent \citeauthor{Allais-generic-syntax}'s library (and in general,  libraries following the standard approach to datatype-genericity in Agda) from being widely adopted is the lack of interoperability:
@@ -545,8 +545,7 @@ Our Agda code is available at \url{https://github.com/Zekt/Generic-Scoped-Syntax
 \section{Allais et al.'s Approach}
 \label{sec:recap}
 
-We first give a simplified account of the interface of \citeauthor{Allais-generic-syntax}'s library.
-To be concrete, we use simply typed $\lambda$-calculus as our running example.
+Before giving a simplified account of the user interface to \citeauthor{Allais-generic-syntax}'s library, we present our running example: simply typed $\lambda$-calculus.
 Traditionally, DSL programmers would manually define a datatype \verb|Lam| in \cref{fig:native-renaming}, where variables are represented as well scoped and typed de Bruijn indices, defined by \verb|Var| in \cref{fig:de-Bruijn-indices}.
 Then the programmers would go on and define operations on \verb|Lam| (renaming, substitution, printing, scope-checking, etc).
 One simplest example is the \verb|rename| function in \cref{fig:native-renaming}, which takes an environment~\name|ρ| represented as a function mapping variables in~\name|Γ|\/ to variables in~\name|Δ|, and applies~\name|ρ| to all the variables in a term of type \verb|Lam|.
@@ -615,9 +614,9 @@ where \name|I|\/~is the set of the types used in the syntax.
 %\end{code}
 %A \con|σ| describes any branching of the construction by a dependent sigma type, a \con|‵X| describes an occurrence of recursion of the syntax being defined by taking its index, and a \con|■| ends a description with the index of the constructed syntax.
 %The interpretation function \verb|⟦_⟧| determines what a description actually means, i.e. what is needed to construct a syntax given a description.
-Instead of giving the definition of \verb|Desc|, we only give a taste of what descriptions look like by showing a description \verb|STLC| of simply typed $\lambda$-calculus (whose details are not important):%
-\footnote{Roughly speaking, inhabitants of \AgdaDatatype{‵STLC} encode the constructor choices except the variable case, which does not need to be described because it is presupposed to be present in every syntax and have a fixed form.
-For each constructor, we describe what (recursive) arguments are needed with \AgdaInductiveConstructor{`X} ---which specifies extensions to the context and the type of the sub-expression--- and the type of the whole constructed expression with \AgdaInductiveConstructor{■}.}
+Instead of giving the definition of \verb|Desc|, we only give a taste of what descriptions look like by showing a description \verb|STLC| of simply typed $\lambda$-calculus, whose details are not important:%
+%\footnote{Roughly speaking, inhabitants of \AgdaDatatype{‵STLC} encode the constructor choices except the variable case, which does not need to be described because it is presupposed to be present in every syntax and have a fixed form.
+%For each constructor, we describe what (recursive) arguments are needed with \AgdaInductiveConstructor{`X} ---which specifies extensions to the context and the type of the sub-expression--- and the type of the whole constructed expression with \AgdaInductiveConstructor{■}.}
 %For example, a syntax of simply typed lambda calculus can be defined in this universe as \verb|STLC| below.
 \begin{code}
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
@@ -681,9 +680,9 @@ For each constructor, we describe what (recursive) arguments are needed with \Ag
 \AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
 \AgdaBound{τ}\AgdaSymbol{))}\<%
 \end{code}
-The point here is that descriptions are data, from which we can compute types and functions for the described syntaxes.
+The point here is that descriptions capture the structure of syntaxes as data, from which we can then compute types and functions for the described syntaxes.
 
-In place of native datatypes like \verb|Lam|, programmers write descriptions like \verb|STLC| and use a (fixed-point) operator 
+In place of native datatypes like \verb|Lam|, DSL programmers write descriptions like \verb|STLC| and use a (fixed-point) operator 
 \begin{code}
 	\>[0]\AgdaKeyword{data}\AgdaSpace{}%
 	\AgdaDatatype{Tm}\AgdaSpace{}%
@@ -697,10 +696,45 @@ In place of native datatypes like \verb|Lam|, programmers write descriptions lik
 	\AgdaDatatype{List}\AgdaSpace{}%
 	\AgdaBound{I}\AgdaSpace{}%
 	\AgdaSymbol{→}\AgdaSpace{}%
-	\AgdaPrimitive{Set}\<%
+	\AgdaPrimitive{Set}\AgdaSpace{}%
+	\AgdaKeyword{where}\<%
+	\\
+	%
+	\>[0][@{}l@{\AgdaIndent{0}}]%
+	\>[2]\AgdaInductiveConstructor{var}\AgdaSpace{}%
+	\>[3]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaDatatype{Var}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\<%
+	\\
+	%	
+	\>[2]\AgdaInductiveConstructor{con}\AgdaSpace{}%
+	\>[3]\AgdaSymbol{:}\AgdaSpace{}%
+	\AgdaFunction{⟦}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaFunction{⟧}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaFunction{Scope}\AgdaSpace{}%
+	\AgdaSymbol{(}\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaSymbol{))}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\AgdaSpace{}%
+	\AgdaSymbol{→}\AgdaSpace{}%
+	\AgdaDatatype{Tm}\AgdaSpace{}%
+	\AgdaGeneralizable{d}\AgdaSpace{}%
+	\AgdaGeneralizable{i}\AgdaSpace{}%
+	\AgdaGeneralizable{Γ}\<%
 \end{code}
-to produce syntax datatypes like \verb|Tm STLC|.
-For these datatypes, \citeauthor{Allais-generic-syntax} provide a generic traversal function
+to derive syntax datatypes like \verb|Tm STLC|.
+Again the details of \verb|Tm| are not important.
+We only make a remark that the \verb|Lam| constructors other than \AgdaInductiveConstructor{var} are encoded by a generic constructor \AgdaInductiveConstructor{con} here; the encoding could be disguised as native constructors using pattern synonyms~\citep{Pickering-pattern-synonyms}, but only to an extent --- for example, the encoding still shows up during interactive case-splitting.
+
+For datatypes of the form \verb|Tm |\name|d|, \citeauthor{Allais-generic-syntax} provide a generic traversal function
 \begin{code}
 	\>[0]\AgdaPostulate{semantics}%
 	\>[226I]\AgdaSymbol{:}\AgdaSpace{}%
@@ -1037,12 +1071,19 @@ with which we can specialise \verb|semantics| to \verb|rename|:
 
 \section{Reifying Syntax-Generic Operations}
 \label{sec:demo}
-We have argued the benefits of native functions instead of those defined on a syntax universe in \cref{sec:intro}.
-Therefore, we redefine constructions in \cref{sec:recap} such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
-\verb|Semantics| and generic programs like \verb|Ren| in \cref{sec:recap} will be redefined in this section and have different types from their counterparts, despite playing similar roles.
-We no longer need fixed points \verb|Tm| and \verb|semantics| which instantiates generic functions to \verb|Tm|.
 
-We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
+It is not particularly pleasant to program with \verb|Tm STLC| and \verb|rename| defined in terms of \verb|semantics| from \cref{sec:recap}, because the (implementation) details of the generic library would keep showing up in these definitions, complicating subsequent constructions.
+Our approach is to regard the generic entities as residing at a meta-level, and use metaprograms to perform partial evaluation and generate, at a different level, code specialised for specific syntaxes/datatypes such as \verb|Lam|.
+This process is conceptually straightforward in Agda, because in functional settings, partial evaluation is just normalisation~\citep{Filinski-semantic-partial-evaluation}, which is directly supported by Agda's elaborator reflection.
+
+To demonstrate, we have adapted \verb|Semantics|, \verb|semantics|, and \verb|Renaming| in \cref{sec:recap} to our framework; the adapted versions have different types from their counterparts but play similar roles.
+Within our framework, programmers start with the native datatype \verb|Lam|, and the process of deriving \verb|rename| is summarised in \cref{fig:flow}.
+
+\todo[inline]{}
+
+Such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
+
+%We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
 
 The DSL programmer needs to provide a proof \verb|LamSyn|\name| : |\verb|Syntax LamD| where \verb|LamD| is the datatype description of \verb|Lam|. 
 Ko et al. have provided a macro \macro|genDataD| that generates from a native datatype its description of type \verb|DataD|.
@@ -1083,9 +1124,9 @@ We also provide a function \verb|SemP| that takes a datatype description, its pr
 \end{code}
 \AgdaKeyword{unquoteDecl} is a built-in primitive provided by Agda that defines a given name, in this case \verb|rename|, by a metaprogram.
 Generated functions are scope- and type-checked, which means here a \verb|rename| function is immediately usable by the programmer.
-Its definition is printed to Agda's debug buffer for the programmers to modify and replace the \AgdaKeyword{unquoteDecl} declaration with.    
+%Its definition is printed to Agda's debug buffer for the programmers to modify and replace the \AgdaKeyword{unquoteDecl} declaration with.    
 
-The steps described can be summarized by \cref{fig:flow}. 
+The steps described are summarised in \cref{fig:flow}. 
 Macros and intermediate functions are represented in boxes, constructions that are generated and passed around are represented in arrows.
 Solid arrows means native function application in Agda, where dotted arrows means they are generated by macros via elaborator reflection.
 
@@ -1096,7 +1137,7 @@ Delightfully they will find these operations are reified as native functions, cl
 \begin{figure}
 	\centering
 	\fbox{\includegraphics[width=.97\columnwidth]{Diagram}}
-	\caption{An illustration of how a DSL programmer interact with our library and metaprograms by Ko et al.}
+	\caption{How DSL programmers derive \AgdaFunction{rename} from \AgdaDatatype{Lam} from \citeauthor{Allais-generic-syntax}'s library ported to our framework}
 	\label{fig:flow}
 \end{figure}
 
@@ -1374,9 +1415,9 @@ Delightfully they will find these operations are reified as native functions, cl
 \section{Discussion}
 \label{sec:discussion}
 
+To address the interoperability problem~(\cref{sec:intro}), our framework allows programmers to work with native datatypes (such as \verb|Lam|) while deriving operations with natural definitions (such as \verb|rename|) from generic libraries; moreover, by showing that the \verb|DataD| description of a datatype satisfies several predicates, we gain access to the corresponding libraries all at once.
 The technique of (re-)defining \citeauthor{Allais-generic-syntax}'s \verb|Desc| universe as a predicate/subset of our \verb|DataD| universe is generally applicable to universes of other generic libraries (as long as they are not more expressive than \verb|DataD|), and makes it easier to use those libraries with our reification metaprograms (compared to reimplementing the metaprograms for each library).
-By showing that the \verb|DataD| description of a datatype satisfies several predicates, we gain access to the corresponding libraries all at once, solving the interoperability problem (\cref{sec:intro}).
-Currently our framework is implemented in Agda only, but the essential idea depends only on elaborator reflection, and should work in more languages as elaborator reflection becomes more popular.
+Currently our framework is implemented in Agda, but the essential idea depends only on elaborator reflection, and should work in more languages as elaborator reflection becomes more popular.
 
 %The universe of syntaxes from \citeauthor{Allais-generic-syntax} we have referenced in our work is replaceable by others, as long as they are not more expressive than the host language, which implies a predicate definable on the datatype universe.
 %We rely heavily on Agda, while the methodology applies to any language that supports elaborator reflection.
@@ -1386,15 +1427,15 @@ Currently our framework is implemented in Agda only, but the essential idea depe
 The reported experiment is small but already reveals some limitations of our framework and of \citeauthor{Allais-generic-syntax}'s library.
 By drawing attention to these limitations, we hope to illuminate some possible future directions for the development of (syntax-) generic libraries.
 \begin{itemize}[leftmargin=*]
-\item For the framework and generic libraries in general:
+\item For the framework:
 It is not so convenient having to carefully apply generic programs to the right arguments and reifying them one at a time --- there should be a better user interface (which may require significant changes to Agda's design though).
-Proofs that \verb|DataD| descriptions satisfy the \verb|Syntax| predicate are straightforward but tedious, and should be automated, probably also with elaborator reflection.
+Proofs that \verb|DataD| descriptions satisfy \verb|Syntax| are straightforward but tedious, and should be automated, probably also with elaborator reflection.
 \item As for \citeauthor{Allais-generic-syntax}'s library and syntax-generic libraries in general:
 Currently the largest-scale development done with \citeauthor{Allais-generic-syntax}'s library seems to be a strong normalisation proof for simply typed $\lambda$-calculus with disjoint sums~\citep[Section~4.3]{Abel-POPLMark-reloaded}, whose features are standard.
 While it is conceivable that the universe can be gradually expanded to encode more datatypes, the DSL features covered will always be predetermined when defining the universe.
 If the intended users include programming language researchers, who invent new features that are unlikely to be covered by existing libraries, then libraries targeting a fixed universe of syntaxes may not be too useful.
 Here are some possible scenarios where syntax-generic libraries might help:
-Users might start with a standard syntax definition and then extend it with new features; this is currently more or less supported by our framework, which allows definitions to be printed (rather than unquoted) and then copied and pasted into the users' files.
+Users might start with a standard syntax definition and then modify it to accommodate new features; this is currently supported by our framework, which allows definitions to be printed (rather than unquoted) and then copied and pasted into the users' files.
 Or, exploiting Agda's interactive capabilities, we could generate partial definitions with holes,  although there is still the problem of where the holes should appear, which is perhaps no less difficult than the problem of composing syntaxes or type theories~\citep{Delaware-meta-theory-a-la-carte,Forster-Coq-a-la-carte}, on which much work is still needed.
 \end{itemize}
 
