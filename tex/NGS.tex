@@ -1076,27 +1076,31 @@ It is not particularly pleasant to program with \verb|Tm STLC| and \verb|rename|
 Our approach is to regard the generic entities as residing at a meta-level, and use metaprograms to perform partial evaluation and generate, at a different level, code specialised for specific syntaxes/datatypes such as \verb|Lam|.
 This process is conceptually straightforward in Agda, because in functional settings, partial evaluation is just normalisation~\citep{Filinski-semantic-partial-evaluation}, which is directly supported by Agda's elaborator reflection.
 
-To demonstrate, we have adapted \verb|Semantics|, \verb|semantics|, and \verb|Renaming| in \cref{sec:recap} to our framework; the adapted versions have different types from their counterparts but play similar roles.
-Within our framework, programmers start with the native datatype \verb|Lam|, and the process of deriving \verb|rename| is summarised in \cref{fig:flow}.
+To demonstrate, we have adapted \verb|Semantics|, \verb|semantics|, and \verb|Renaming| in \cref{sec:recap} to our framework, enabling programmers to write \verb|Lam| and then derive \verb|rename| for \verb|Lam|.
+Below we sketch (a slightly simplified version of) the derivation process, which is depicted in \cref{fig:flow}.
 
-\todo[inline]{}
-
-Such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
-
-%We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
-
-The DSL programmer needs to provide a proof \verb|LamSyn|\name| : |\verb|Syntax LamD| where \verb|LamD| is the datatype description of \verb|Lam|. 
-Ko et al. have provided a macro \macro|genDataD| that generates from a native datatype its description of type \verb|DataD|.
+The first step is to derive from \verb|Lam| a description \verb|LamD| of type \verb|DataD| using a macro \AgdaMacro{genDataD}:
 \begin{code}
 	\>[0]\AgdaFunction{LamD}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
 	\AgdaMacro{genDataD}\AgdaSpace{}%
 	\AgdaDatatype{Lam}\<%
 \end{code}
+Somewhat unsatisfactorily, currently DSL programmers still need to understand \verb|DataD| descriptions, because they need to provide a proof that \verb|Lam| is a syntax datatype:
+\begin{code}
+\>\AgdaFunction{LamSyn}\AgdaSpace{}\AgdaSymbol{:}\AgdaSpace{}\AgdaFunction{Syntax}\AgdaSpace{}\AgdaFunction{LamD}\<
+\end{code}
+The predicate \verb|Syntax| holds for \name|d| \AgdaSymbol{:} \verb|DataD| essentially when there exists a \verb|Desc| that translates to~\name|d|.
+(For other kind of generic libraries, similar predicates may be defined more directly on the structure of \verb|DataD|.)
+
+%Such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
+
+%We describe what a DSL programmer would typically program, then illustrate how they can exploit our library and metaprograms provided by Ko et al.
+
 %This means that the programmer needs to have a basic understanding of \verb|DataD|. \todo{Discussion? DataD closely resemble native datatype definition in Agda.}
 %More specifically, the core part of \verb|DataD|, \verb|ConDs| is a list in which each \verb|ConD| represents a constructor.
-Now the programmer gets to choose what generic syntax operation they want to instantiate.
-For example, our library provides \verb|Renaming| that generates a \verb|Semantics| from a \name|d : |\verb|DataD|\todo{simplified}\ and its \verb|Syntax|\name| d|.
+
+Now programmers can apply \verb|Renaming| to both \verb|LamD| and \verb|LamSyn| to instantiate a renaming \verb|Semantics| for \verb|Lam|:
 \begin{code}
 	\>[0]\AgdaFunction{LamRen}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
@@ -1104,7 +1108,7 @@ For example, our library provides \verb|Renaming| that generates a \verb|Semanti
 	\AgdaFunction{LamD}\AgdaSpace{}%
 	\AgdaPostulate{LamSyn}\<%
 \end{code}
-We also provide a function \verb|SemP| that takes a datatype description, its proof of being syntax, and the \verb|Semantics| we just generated, then generates an instance of \verb|FoldP|.
+\citeauthor{Allais-generic-syntax}'s \verb|semantics| function is replaced by \verb|SemP|, which compute `fold programs' of type \verb|FoldP| from a \verb|Semantics|:
 \begin{code}
 	\>[0]\AgdaFunction{LamRenP}\AgdaSpace{}%
 	\AgdaSymbol{=}\AgdaSpace{}%
@@ -1113,7 +1117,7 @@ We also provide a function \verb|SemP| that takes a datatype description, its pr
 	\AgdaPostulate{LamSyn}\AgdaSpace{}%
 	\AgdaFunction{LamRen}\<%
 \end{code}
-\verb|FoldP| and the metaprogram \verb|defineFold| are given by Ko et al., the former is the description of generic fold operations, and the latter instantiate them to native fold functions.
+Unlike \verb|semantics|, fold programs themselves are not executable, but can be reified as native functions by a metaprogram \verb|defineFold| in conjunction with \AgdaKeyword{unquoteDecl}, a built-in primitive that defines a given name (in this case \verb|rename|):
 \begin{code}
 	\>[0]\AgdaKeyword{unquoteDecl}\AgdaSpace{}%
 	\AgdaDatatype{rename}\AgdaSpace{}%
@@ -1122,24 +1126,31 @@ We also provide a function \verb|SemP| that takes a datatype description, its pr
 	\AgdaFunction{LamRenP}\AgdaSpace{}%
 	\AgdaDatatype{rename}\<%
 \end{code}
-\AgdaKeyword{unquoteDecl} is a built-in primitive provided by Agda that defines a given name, in this case \verb|rename|, by a metaprogram.
-Generated functions are scope- and type-checked, which means here a \verb|rename| function is immediately usable by the programmer.
+This \verb|rename| function has a definition close to the one in \cref{fig:native-renaming}, and can be used just like manually defined functions.
+Note that the generic entities \verb|LamD|, \verb|LamSyn|, \verb|LamRen|, and \verb|LamRenP| are just `meta-level' artefacts for deriving \verb|rename|, and do not interfere with the subsequent development.
+
+%Generated functions are scope- and type-checked, which means here a \verb|rename| function is immediately usable by the programmer.
+
+%We also provide a function \verb|SemP| that takes a datatype description, its proof of being syntax, and the \verb|Semantics| we just generated, then generates an instance of \verb|FoldP|.
+%\verb|FoldP| and the metaprogram \verb|defineFold| are given by Ko et al., the former is the description of generic fold operations, and the latter instantiate them to native fold functions.
+
+
 %Its definition is printed to Agda's debug buffer for the programmers to modify and replace the \AgdaKeyword{unquoteDecl} declaration with.    
 
-The steps described are summarised in \cref{fig:flow}. 
-Macros and intermediate functions are represented in boxes, constructions that are generated and passed around are represented in arrows.
-Solid arrows means native function application in Agda, where dotted arrows means they are generated by macros via elaborator reflection.
-
-The programmer need not understand the details of the structures we just mentioned, except the datatype description \verb|DataD| and the proof of \verb|Syntax| they need to provide.
-With the help of these utilities, we have shown that a DSL programmer only needs to prove their datatypes to be syntaxes to acquire instantiation of generic renaming, as well as other term traversal operations.
-Delightfully they will find these operations are reified as native functions, close to what they would have written for the syntaxes they just defined.
+%The programmer need not understand the details of the structures we just mentioned, except the datatype description \verb|DataD| and the proof of \verb|Syntax| they need to provide.
+%With the help of these utilities, we have shown that a DSL programmer only needs to prove their datatypes to be syntaxes to acquire instantiation of generic renaming, as well as other term traversal operations.
+%Delightfully they will find these operations are reified as native functions, close to what they would have written for the syntaxes they just defined.
 
 \begin{figure}
 	\centering
 	\fbox{\includegraphics[width=.97\columnwidth]{Diagram}}
-	\caption{How DSL programmers derive \AgdaFunction{rename} from \AgdaDatatype{Lam} from \citeauthor{Allais-generic-syntax}'s library ported to our framework}
+	\caption{How DSL programmers derive \AgdaFunction{rename} from \AgdaDatatype{Lam} using \citeauthor{Allais-generic-syntax}'s library ported to our framework}
 	\label{fig:flow}
 \end{figure}
+
+%The steps described are summarised in \cref{fig:flow}. 
+%Macros and intermediate functions are represented in boxes, constructions that are generated and passed around are represented in arrows.
+%Solid arrows means native function application in Agda, where dotted arrows means they are generated by macros via elaborator reflection.
 
 %\section{Behind the scenes}
 %This section is more technical.
