@@ -1,12 +1,29 @@
 %% This BibTeX bibliography file was created using BibDesk.
 %% http://bibdesk.sourceforge.net/
 
-%% Created for Josh Ko at 2022-06-02 18:39:31 +0800 
+%% Created for Josh Ko at 2022-07-09 21:10:07 +0800 
 
 
 %% Saved with string encoding Unicode (UTF-8) 
 
 
+
+@inproceedings{Magalhaes-GGP,
+	abstract = {Generic programming (GP) is a form of abstraction in programming languages that serves to reduce code duplication by exploiting the regular structure of algebraic datatypes. Over the years, several different approaches to GP in Haskell have surfaced. These approaches are often similar, but certain differences make them particularly well-suited for one specific domain or application. As such, there is a lot of code duplication across GP libraries, which is rather unfortunate, given the original goals of GP.\par
+
+To address this problem, we define conversions from one popular GP library representation to several others. Our work unifies many approaches to GP, and simplifies the life of both library writers and users. Library writers can define their approach as a conversion from our library, obviating the need for writing meta-programming code for generation of conversions to and from the generic representation. Users of GP, who often struggle to find ``the right approach'' to use, can now mix and match functionality from different libraries with ease, and need not worry about having multiple (potentially inefficient and large) code blocks for generic representations in different approaches.},
+	author = {Magalh{\~a}es, Jos{\'e} Pedro and L{\"o}h, Andres},
+	booktitle = {International Symposium on Practical Aspects of Declarative Languages (PADL)},
+	date-added = {2022-07-02 08:34:38 +0800},
+	date-modified = {2022-07-02 08:34:38 +0800},
+	doi = {10.1007/978-3-319-04132-2_15},
+	pages = {216-231},
+	publisher = {Springer},
+	series = {Lecture Notes in Computer Science},
+	title = {Generic Generic Programming},
+	volume = {8324},
+	year = 2014,
+	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhbxCYAC4ALgAvAC4ALgAvAC4ALgAvAC4ALgAvAEwAaQBiAHIAYQByAHkALwBNAG8AYgBpAGwAZQAgAEQAbwBjAHUAbQBlAG4AdABzAC8ASgBGAEoAVwBXAFAANgA0AFEARAB+AGMAbwBtAH4AZwBvAG8AZABpAHcAYQByAGUAfgBHAG8AbwBkAFIAZQBhAGQAZQByAC8ARABvAGMAdQBtAGUAbgB0AHMALwBCAGkAYgBSAGUAcABvAHMAaQB0AG8AcgB5AC8ATQBhAGcAYQBsAGgAYQMDAGUAcwAgAGUAdAAgAGEAbAAgADIAMAAxADQAIAAtACAARwBlAG4AZQByAGkAYwAgAEcAZQBuAGUAcgBpAGMAIABQAHIAbwBnAHIAYQBtAG0AaQBuAGcALgBwAGQAZk8RAnwAAAAAAnwAAgAABlN5c3RlbQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABCRAAB/////xRNYWdhbGhhI0ZGRkZGRkZGLnBkZi0gR2VuZXJpYyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AAAAAAAAAAAAAAAAAAQABgAACiBjdQAAAAAAAAAAAAAAAAANQmliUmVwb3NpdG9yeQAAAgCcLzpVc2Vyczpqb3Noa286TGlicmFyeTpNb2JpbGUgRG9jdW1lbnRzOkpGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyOkRvY3VtZW50czpCaWJSZXBvc2l0b3J5Ok1hZ2FsaGHMg2VzIGV0IGFsIDIwMTQgLSBHZW5lcmljIEdlbmVyaWMgUHJvZ3JhbW1pbmcucGRmAA4AcAA3AE0AYQBnAGEAbABoAGEDAwBlAHMAIABlAHQAIABhAGwAIAAyADAAMQA0ACAALQAgAEcAZQBuAGUAcgBpAGMAIABHAGUAbgBlAHIAaQBjACAAUAByAG8AZwByAGEAbQBtAGkAbgBnAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCaVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9NYWdhbGhhzINlcyBldCBhbCAyMDE0IC0gR2VuZXJpYyBHZW5lcmljIFByb2dyYW1taW5nLnBkZgATAAEvAAAVAAIADf//AAAACAANABoAJAFXAAAAAAAAAgEAAAAAAAAABQAAAAAAAAAAAAAAAAAAA9c=}}
 
 @inproceedings{Pickering-staged-SoP,
 	abstract = {Generic programming libraries have historically traded efficiency in return for convenience, and the \textsf{generics-sop} library is no exception. It offers a simple, uniform, representation of all datatypes precisely as a sum of products, making it easy to write generic functions. We show how to finally make \textsf{generics-sop} fast through the use of staging with Typed Template Haskell.},
@@ -84,14 +101,17 @@ Several interesting language features, including binders and general recursion, 
 	year = {2013},
 	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhbxCTAC4ALgAvAC4ALgAvAC4ALgAvAC4ALgAvAEwAaQBiAHIAYQByAHkALwBNAG8AYgBpAGwAZQAgAEQAbwBjAHUAbQBlAG4AdABzAC8ASgBGAEoAVwBXAFAANgA0AFEARAB+AGMAbwBtAH4AZwBvAG8AZABpAHcAYQByAGUAfgBHAG8AbwBkAFIAZQBhAGQAZQByAC8ARABvAGMAdQBtAGUAbgB0AHMALwBCAGkAYgBSAGUAcABvAHMAaQB0AG8AcgB5AC8ARABlAGwAYQB3AGEAcgBlACAAZQB0ACAAYQBsACAAMgAwADEAMwAgAC0AIABNAGUAdABhAC0AVABoAGUAbwByAHkAIABhAwAAIABsAGEAIABDAGEAcgB0AGUAYQAuAHAAZABmTxECagAAAAACagACAAAGU3lzdGVtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJEAAH/////H0RlbGF3YXJlIGV0IGFsIDIwMSNGRkZGRkZGRi5wZGYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAABAAGAAAKIGN1AAAAAAAAAAAAAAAAAA1CaWJSZXBvc2l0b3J5AAACAJcvOlVzZXJzOmpvc2hrbzpMaWJyYXJ5Ok1vYmlsZSBEb2N1bWVudHM6SkZKV1dQNjRRRH5jb21+Z29vZGl3YXJlfkdvb2RSZWFkZXI6RG9jdW1lbnRzOkJpYlJlcG9zaXRvcnk6RGVsYXdhcmUgZXQgYWwgMjAxMyAtIE1ldGEtVGhlb3J5IGHMgCBsYSBDYXJ0ZWEucGRmAAAOAGYAMgBEAGUAbABhAHcAYQByAGUAIABlAHQAIABhAGwAIAAyADAAMQAzACAALQAgAE0AZQB0AGEALQBUAGgAZQBvAHIAeQAgAGEDAAAgAGwAYQAgAEMAYQByAHQAZQBhAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCVVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9EZWxhd2FyZSBldCBhbCAyMDEzIC0gTWV0YS1UaGVvcnkgYcyAIGxhIENhcnRlYS5wZGYAABMAAS8AABUAAgAN//8AAAAIAA0AGgAkAU0AAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAADuw==}}
 
-@misc{Ko-NDGP,
+@article{Ko-NDGP,
 	abstract = {Datatype-generic programming is natural and useful in dependently typed languages such as Agda. However, datatype-generic libraries in Agda are not reused as much as they should be, because traditionally they work only on datatypes decoded from a library's own version of datatype descriptions; this means that different generic libraries cannot be used together, and they do not work on native datatypes, which are preferred by the practical Agda programmer for better language support and access to other libraries. This paper presents a framework using Agda's elaborator reflection to instantiate datatype-generic programs as, and for, a useful range of native datatypes and functions ---including universe-polymorphic ones--- in programmer-friendly and customisable forms. Thanks to the power of elaborator reflection, generic programs do not need to be drastically rewritten compared to their traditional forms, making it easy to adapt existing generic libraries and develop new ones. We expect that datatype-generic libraries built with our framework ---being interoperable with native entities--- will finally be suitable for the toolbox of the practical Agda programmer.},
 	author = {Ko, Hsiang-Shang and Chen, Liang-Ting and Lin, Tzu-Chi},
 	date-added = {2022-03-13 16:23:52 +0800},
-	date-modified = {2022-06-02 18:38:59 +0800},
-	howpublished = {Conditionally accepted for the \textit{International Conference on Functional Programming (ICFP)}},
+	date-modified = {2022-07-09 21:10:07 +0800},
+	doi = {10.1145/3547629},
+	journal = {Proceedings of the ACM on Programming Languages},
+	number = {ICFP},
+	pages = {98:1--29},
 	title = {Datatype-Generic Programming Meets Elaborator Reflection},
-	url = {https://github.com/Zekt/Type-Embellishment/raw/master/tex/ICFP22/NDGP.pdf},
+	volume = {6},
 	year = {2022},
 	bdsk-file-1 = {YnBsaXN0MDDSAQIDBFxyZWxhdGl2ZVBhdGhZYWxpYXNEYXRhXxCtLi4vLi4vLi4vLi4vTGlicmFyeS9Nb2JpbGUgRG9jdW1lbnRzL0pGSldXUDY0UUR+Y29tfmdvb2Rpd2FyZX5Hb29kUmVhZGVyL0RvY3VtZW50cy9CaWJSZXBvc2l0b3J5L0tvIGV0IGFsIDIwMjIgLSBEYXRhdHlwZS1HZW5lcmljIFByb2dyYW1taW5nIE1lZXRzIEVsYWJvcmF0b3IgUmVmbGVjdGlvbi5wZGZPEQLOAAAAAALOAAIAAAZTeXN0ZW0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQkQAAf////8fS28gZXQgYWwgMjAyMiAtIERhI0ZGRkZGRkZGLnBkZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAAAAAAAAAAAAAAEAAYAAAogY3UAAAAAAAAAAAAAAAAADUJpYlJlcG9zaXRvcnkAAAIAsC86VXNlcnM6am9zaGtvOkxpYnJhcnk6TW9iaWxlIERvY3VtZW50czpKRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlcjpEb2N1bWVudHM6QmliUmVwb3NpdG9yeTpLbyBldCBhbCAyMDIyIC0gRGF0YXR5cGUtR2VuZXJpYyBQcm9ncmFtbWluZyBNZWV0cyBFbGFib3JhdG9yIFJlZmxlY3Rpb24ucGRmAA4AmgBMAEsAbwAgAGUAdAAgAGEAbAAgADIAMAAyADIAIAAtACAARABhAHQAYQB0AHkAcABlAC0ARwBlAG4AZQByAGkAYwAgAFAAcgBvAGcAcgBhAG0AbQBpAG4AZwAgAE0AZQBlAHQAcwAgAEUAbABhAGIAbwByAGEAdABvAHIAIABSAGUAZgBsAGUAYwB0AGkAbwBuAC4AcABkAGYADwAOAAYAUwB5AHMAdABlAG0AEgCuVXNlcnMvam9zaGtvL0xpYnJhcnkvTW9iaWxlIERvY3VtZW50cy9KRkpXV1A2NFFEfmNvbX5nb29kaXdhcmV+R29vZFJlYWRlci9Eb2N1bWVudHMvQmliUmVwb3NpdG9yeS9LbyBldCBhbCAyMDIyIC0gRGF0YXR5cGUtR2VuZXJpYyBQcm9ncmFtbWluZyBNZWV0cyBFbGFib3JhdG9yIFJlZmxlY3Rpb24ucGRmABMAAS8AABUAAgAN//8AAAAIAA0AGgAkANQAAAAAAAACAQAAAAAAAAAFAAAAAAAAAAAAAAAAAAADpg==}}
 

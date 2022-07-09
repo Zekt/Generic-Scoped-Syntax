@@ -1,4 +1,4 @@
-\documentclass[sigplan,review,fleqn]{acmart}
+\documentclass[sigplan,screen,fleqn]{acmart}
 \usepackage{agda}
 
 %% Rights management information.  This information is sent to you
@@ -21,7 +21,7 @@
 %\acmArticle{0}
 %\acmMonth{0}
 
-\acmConference[TyDe'22]{Workshop on Type-Driven Development}{September 11, 2022}{Ljubljana, Slovenia}
+\acmConference[TyDe '22]{Workshop on Type-Driven Development}{September 11, 2022}{Ljubljana, Slovenia}
 
 %%
 %% Submission ID.
@@ -43,7 +43,7 @@
 \citestyle{acmauthoryear}
 \setcitestyle{nosort}
 
-\settopmatter{printacmref=false}
+\settopmatter{printacmref=false,printfolios=true}
 
 \usepackage[british]{babel}
 %\usepackage[hyperpageref]{backref} % this may be removed
@@ -680,6 +680,7 @@ Instead of giving the definition of \verb|Desc|, we only give a taste of what de
 \AgdaOperator{\AgdaInductiveConstructor{‵→}}\AgdaSpace{}%
 \AgdaBound{τ}\AgdaSymbol{))}\<%
 \end{code}
+(The `\AgdaSymbol{λ}\AgdaSpace{}\AgdaKeyword{where}' syntax is a slightly cleaner notation for multi-line pattern-matching $\lambda$-expressions.)
 The point here is that descriptions capture the structure of syntaxes as data, from which we can then compute types and functions for the described syntaxes.
 
 In place of native datatypes like \verb|Lam|, DSL programmers write descriptions like \verb|STLC| and use a (fixed-point) operator 
@@ -732,7 +733,7 @@ In place of native datatypes like \verb|Lam|, DSL programmers write descriptions
 \end{code}
 to derive syntax datatypes like \verb|Tm STLC|.
 Again the details of \verb|Tm| are not important.
-We only make a remark that the \verb|Lam| constructors other than \AgdaInductiveConstructor{var} are encoded by a generic constructor \AgdaInductiveConstructor{con} here; the encoding could be disguised as native constructors using pattern synonyms~\citep{Pickering-pattern-synonyms}, but only to an extent --- for example, the encoding still shows up during interactive case-splitting.
+We only make a remark that the \verb|Lam| constructors other than \AgdaInductiveConstructor{var} are encoded by a generic constructor \AgdaInductiveConstructor{con} here; the encoding could be disguised as native constructors using pattern synonyms, but only to an extent --- for example, the encoding still shows up during interactive case-splitting.
 
 For datatypes of the form \verb|Tm |\name|d|, \citeauthor{Allais-generic-syntax} provide a generic traversal function
 \begin{code}
@@ -1091,7 +1092,7 @@ Somewhat unsatisfactorily, currently DSL programmers still need to understand \v
 \>\AgdaFunction{LamSyn}\AgdaSpace{}\AgdaSymbol{:}\AgdaSpace{}\AgdaFunction{Syntax}\AgdaSpace{}\AgdaFunction{LamD}\<
 \end{code}
 The predicate \verb|Syntax| holds for \name|d| \AgdaSymbol{:} \verb|DataD| essentially when there exists a \verb|Desc| that translates to~\name|d|.
-(For other kinds of generic libraries, similar predicates may be defined more directly on the structure of \verb|DataD|.)
+%(For other kinds of generic libraries, similar predicates may be defined more directly on the structure of \verb|DataD| --- see \citet[Section~6.3]{Ko-NDGP}.)
 
 %Such that every usage of the syntax universe are substituted with a datatype description \verb|DataD| along with a predicate \verb|Syntax|\name| : |\verb|DataD|\name| → |\verb|Set| that says a \verb|DataD| satisfies what is required for a datatype to be a syntax.
 
@@ -1427,7 +1428,7 @@ Notably, the generic entities \verb|LamD|, \verb|LamSyn|, \verb|LamRen|, and \ve
 \label{sec:discussion}
 
 To address the interoperability problem~(\cref{sec:intro}), our framework allows programmers to work with native datatypes (such as \verb|Lam|) while deriving operations with natural definitions (such as \verb|rename|) from generic libraries; moreover, by showing that the \verb|DataD| description of a datatype satisfies several predicates, we gain access to the corresponding libraries all at once.
-The technique of (re-)defining \citeauthor{Allais-generic-syntax}'s \verb|Desc| universe as a predicate/subset of our \verb|DataD| universe is generally applicable to universes of other generic libraries (as long as they are not more expressive than \verb|DataD|), and makes it easier to use those libraries with our reification metaprograms (compared to reimplementing the metaprograms for each library).
+The technique of translating \citeauthor{Allais-generic-syntax}'s \verb|Desc| universe to our \verb|DataD| universe is known~\citep{Magalhaes-GGP} and generally applicable to universes of other generic libraries (as long as they are not more expressive than \verb|DataD|), and makes it easier to use those libraries with our reification metaprograms (compared to reimplementing the metaprograms for each library).
 Currently our framework is implemented in Agda, but the essential idea depends only on elaborator reflection, and should work in more languages as elaborator reflection becomes more popular.
 
 %The universe of syntaxes from \citeauthor{Allais-generic-syntax} we have referenced in our work is replaceable by others, as long as they are not more expressive than the host language, which implies a predicate definable on the datatype universe.
