@@ -224,15 +224,6 @@ Renaming {D = D} {N} C
                       ; (inr ⟦Es⟧) → toN (inr (toSyntax id ⟦Es⟧)) }}
   where open DataC C
 
--- RenameLamSem : Semantics (findDataD (quote Lam)) SyntaxLam Var Lam
--- RenameLamSem = Renaming (findDataC (quote Lam)) SyntaxLam
--- 
--- RenameP = SemP (findDataC (quote Lam)) SyntaxLam RenameLamSem
-
---unquoteDecl rename = defineFold RenameP rename
-
---RenameC = genFoldC RenameP rename
---
 SubstT : ∀ {D N} (C : DataC D N) → (Sy : Syntaxᵈ Type D) → Setω
 SubstT {D} {N} C Sy@(_
                  ,ωω refl
@@ -261,12 +252,3 @@ Subst {D = D} {N} C Sy@(_
   ; alg = λ { (inl x)    → x
             ; (inr ⟦Es⟧) → toN (inr (toSyntax (λ v → toN (inl (_ , _ , v , refl))) ⟦Es⟧)) }}
   where open DataC C
-
---SubstLamSem : Semantics (findDataD (quote Lam)) SyntaxLam Lam Lam
---SubstLamSem = Subst (findDataC (quote Lam)) SyntaxLam RenameC
---
---SubstP = SemP (findDataC (quote Lam)) SyntaxLam SubstLamSem
---
---unquoteDecl sub = defineFold SubstP sub
---
---SubstC = genFoldC SubstP sub
