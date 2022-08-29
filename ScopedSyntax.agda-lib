@@ -3,5 +3,6 @@ include:
   src
 depend:
   Embellishment
+  standard-library
 flags:
   --auto-inline -v print:10 -v meta:10

@@ -35,7 +35,7 @@ fromDesc' (`▪ i)      Δ = ι (i , Δ , tt)
 ⟦ `▪ j     ⟧ X i Γ = i ≡ j
 
 Syntaxⁱ : Set ℓ → (⊤ → Tel ℓ') → Setω
-Syntaxⁱ {ℓ} {ℓ'} Ty tel = Σω (ℓ ≡ ℓ') λ {refl → tel ≡ω λ _ → [ _ ∶ Ty ] [ _ ∶ List Ty ] []}
+Syntaxⁱ {ℓ} {ℓ'} Ty tel = (ℓ ,ω (λ _ → [ _ ∶ Ty ] [ _ ∶ List Ty ] [])) ≡ω (ℓ' ,ω tel) --????
 
 Syntaxʳ : RecD (Indexˢ Ty) rb → List Ty → Setω
 Syntaxʳ (ι (_ , Γ , tt)) Δ = Liftω (Σ[ Δ' ∈ _ ] Γ ≡ Δ' <> Δ)
@@ -56,12 +56,17 @@ Syntaxᶜ (ρ A D)          Δ = Syntaxʳ A Δ ×ωω Syntaxᶜ D Δ
 Syntaxᶜˢ : {Ty : Set ℓ} → ConDs (Indexˢ Ty) cbs → Setω
 Syntaxᶜˢ [] = Liftω ⊤
 Syntaxᶜˢ {ℓ = ℓ} {cbs = cb ∷ cbs} {Ty = Ty} (D ∷ Ds) =
-   Σω[ cb' ∈ ConB ]
+   (Σω[ cb' ∈ ConB ]
   Σωω[ D' ∈ (List Ty → ConD (Indexˢ Ty) cb') ]
-  Σωω ((cb ,ω D) ≡ω (((inl ℓ ∷ cb') ,ω σ (List Ty) D') ⦂ω Σω ConB (ConD (Indexˢ Ty))))
-      λ {refl → Σωω[ D'' ∈ Desc' Ty cb' ]
-                  (∀ Δ → (fromDesc' D'' Δ) ≡ω D' Δ) ×ωω
-                  Syntaxᶜˢ Ds}
+  Σωω[ D'' ∈ Desc' Ty cb' ]
+    (cb ,ω D) ≡ω (inl ℓ ∷ cb' ,ω σ (List Ty) D'
+      ⦂ω Σω ConB (λ cb → ConD (Indexˢ Ty) cb))
+    ×ωω (∀ Δ → fromDesc' D'' Δ ≡ω D' Δ))
+    ×ωω Syntaxᶜˢ Ds
+--  Σωω ((cb ,ω D) ≡ω (((inl ℓ ∷ cb') ,ω σ (List Ty) D') ⦂ω Σω ConB (ConD (Indexˢ Ty))))
+--      λ {refl → Σωω[ D'' ∈ Desc' Ty cb' ]
+--                  (∀ Δ → (fromDesc' D'' Δ) ≡ω D' Δ) ×ωω
+--                  Syntaxᶜˢ Ds}
 
 Syntaxᶜˢ' : Set ℓ → ConDs (Indexˢ Ty) (cb ∷ cbs) → Setω
 Syntaxᶜˢ' {ℓ = ℓ} {cb = cb} I (D ∷ Ds) =
@@ -93,11 +98,12 @@ Syntaxᶜˢ' {ℓ = ℓ} {cb = cb} I (D ∷ Ds) =
 Syntax : Set ℓ → PDataD → Setω
 Syntax {ℓ} Ty PD =
   Σωω Scoped
-      λ { (refl ,ω refl ,ωω refl ,ω refl) →
+      λ { (refl ,ωω refl) →
             Σωω[ (cb' ,ω cbs' ,ω D' ,ωω Ds')
                    ∈ SyntaxConDs ⟦ Index tt ⟧ᵗ ]
-            Σω (struct ≡ (cb' ∷ cbs'))
-               (λ {refl → applyP ≡ω λ tt → (D' ∷ Ds')})
+            (struct       ,ω applyP)              ≡ω
+             ((cb' ∷ cbs' ,ω λ _ → (D' ∷ Ds'))
+                ⦂ω Σω ConBs (λ cbs → ⊤ → ConDs _ cbs))
             ×ωω Syntaxᶜˢ' ⟦ Index tt ⟧ᵗ (D' ∷ Ds')
         }
   where
@@ -108,11 +114,16 @@ Syntax {ℓ} Ty PD =
                     Σωω[ D   ∈ ConD X cb ]
                       ConDs X cbs
     Scoped : Setω
-    Scoped = Σω ((alevel , plevel) ≡ (lzero , lzero)) (λ {refl →
-                Σωω (Param ≡ω []) (λ {refl →
-                  Syntaxⁱ {ℓ} {ilevel} Ty (Index)
-                })
-              })
+    Scoped = Σωω ((alevel ,ω plevel ,ω Param) ≡ω
+                 ((lzero  ,ω lzero  ,ω [])
+                   ⦂ω (Σω Level λ _ → Σω Level λ x → Tel x) ))
+                 λ {refl →
+                    Syntaxⁱ {ℓ} {ilevel} Ty (Index)
+                 }
+-- Σωω ((alevel ,ω plevel ,ω Param) ≡ω
+--   ((lzero  ,ω lzero  ,ω [])
+--     ⦂ω Σω Level (λ _ → Σω Level λ p → Tel p)))
+--   λ{ refl → Syntaxⁱ Ty Index }
 
 -- A possibly better (or worse) way to handle equalities
 --    Scoped : Setω
@@ -123,10 +134,15 @@ Syntax {ℓ} Ty PD =
 --                  (lzero  ,ω lzero  ,ω []    ,ωω λ {tt → [ _ ∶ Ty ] [ _ ∶ List Ty ] []})
 
 Syntaxᵈ : Set ℓ → DataD → Setω
-Syntaxᵈ Ty D = Σω (DataD.#levels D ≡ 0) λ _ →
-               Σωω PDataD λ PD →
-               Σωω (DataD.applyL D ≡ω λ _ → PD)
-                  λ {refl → Syntax Ty PD}
+Syntaxᵈ Ty D = Σωω PDataD λ PD → (#levels ,ω applyL) ≡ω
+                                  ((0 ,ω λ _ → PD)
+                                    ⦂ω Σω ℕ (λ _ → Levels → PDataD))
+                                 ×ωω Syntax Ty PD
+  where open DataD D
+-- Σω (DataD.#levels D ≡ 0) λ _ →
+-- Σωω PDataD λ PD →
+-- Σωω (DataD.applyL D ≡ω λ _ → PD)
+--    λ {refl → Syntax Ty PD}
 
 --toDescᶜ : (D : ConD (Indexˢ I) cb) → Syntaxᶜ D Γ → Desc' I
 --toDescᶜ (ι (t , ts , tt)) (lift refl) = `▪ t

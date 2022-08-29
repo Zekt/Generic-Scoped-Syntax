@@ -43,6 +43,7 @@ weakenVarR (s V) = s (weakenVarR V)
 
 data Type : Set where
   α    : Type
+  `ℕ    : Type
   _‵→_ : Type → Type → Type
 
 private variable
