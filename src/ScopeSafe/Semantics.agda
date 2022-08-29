@@ -8,6 +8,11 @@ open import Generics.Predicates
 open import Generics.Telescope
 open import Generics.Reflection
 
+data Type : Set where
+  α    : Type
+  `ℕ    : Type
+  _‵→_ : Type → Type → Type
+
 private variable
   I : Set ℓ
   i : I
@@ -90,36 +95,6 @@ ContextEq {D' = `σ _ _}   (_ , ⟦D'⟧) = ContextEq ⟦D'⟧
 ContextEq {D' = `X _ _ _} (_ , ⟦D'⟧) = ContextEq ⟦D'⟧
 ContextEq {D' = `▪ _}     ⟦D'⟧       = cong fst (cong snd ⟦D'⟧)
 
---translateʳ : ∀ {R : RecD (Indexˢ I) rb}
---           → (Syʳ : Syntaxʳ R Γ)
---           → (Γ -Env) V Δ
---           → (∀ {i Γ Δ} → V i Γ → (Γ -Env) Var Δ → (V i) Δ)
---           → ⟦ R ⟧ʳ (λ { (σ' , Γ' , tt) →
---                       (∀ Δ → (Γ' -Env) V Δ → C σ' Δ)})
---           → ⟦ R ⟧′ʳ Syʳ (Kripke V C) i Δ
---translateʳ {R = ι (σ' , ._ , tt)}
---           (lift ([] , refl))
---           ρ'
---           thⱽ
---           ⟦R⟧ = ⟦R⟧ _ ρ'
---translateʳ {R = ι (σ' , ._ , tt)}
---           (lift (x ∷ Δ' , refl))
---           ρ'
---           thⱽ
---           ⟦R⟧ = λ E₁ E₂ → ⟦R⟧ _ (E₂ Env++ bifmap (λ v → thⱽ v E₁) ρ')
-
---translateᶜ : ∀ {D : ConD (Indexˢ I) cb} → (Syᶜ : Syntaxᶜ D Γ)
---           → (Γ -Env) V Δ
---           → (∀ {i Γ Δ} → V i Γ → (Γ -Env) Var Δ → V i Δ)
---           → (d : ⟦ D ⟧ᶜ (λ { (σ' , Γ' , tt) →
---                       ∀ Δ → (Γ' -Env) V Δ → C σ' Δ}) (i , Γ , tt))
---           → ⟦ D ⟧′ᶜ Syᶜ (Kripke V C) i Δ
---translateᶜ {D = ι (j , Θ , tt)} (lift refl) ρ' thⱽ ⟦D⟧  = cong fst (sym ⟦D⟧) , ContextEq (lift refl) {!!}
---translateᶜ {D = σ A D} (refl ,ω Syᶜ) ρ' thⱽ (a , ⟦D⟧)   = a , translateᶜ (Syᶜ a) ρ' thⱽ ⟦D⟧
---translateᶜ {D = ρ R D} (Syʳ ,ωω Syᶜ) ρ' thⱽ (⟦R⟧ , ⟦D⟧) = translateʳ Syʳ ρ' thⱽ ⟦R⟧ , translateᶜ Syᶜ ρ' thⱽ ⟦D⟧
-
---translateᵏ :`
-
 translateᶜ : ∀ {D' : Desc' I cb}
            → (Γ -Env) V Δ
            → (∀ {i Γ Δ} → V i Γ → (Γ -Env) Var Δ → V i Δ)
@@ -191,48 +166,6 @@ SemP {ℓ} {I} {D} {N} {V} {C} Con
   }
   where open Semantics S
 
-SyntaxLam : Syntaxᵈ Type (findDataD (quote Lam))
-SyntaxLam = _
-        ,ωω refl
-        ,ωω (refl ,ωω refl)
-        ,ωω _
-        ,ωω refl
-        ,ωω refl
-        ,ωω (_ ,ω  _ ,ωω _ ,ωω refl ,ωω (λ _ → refl))
-        ,ωω (_ ,ω _ ,ωω _ ,ωω refl ,ωω (λ _ → refl))
-        ,ωω lift tt
-
---        _
---        ,ω  (λ x → _)
---        ,ωω ((`σ Type λ t →
---              `σ Type (λ u →
---              `X (t ∷ []) u
---              (`▪ (t ‵→ u)))))
---        ,ωω (refl ,ωω (λ Δ → refl) ,ωω (lift tt))
---refl
---         ,ω  _
---         ,ωω refl
---         ,ωω (refl ,ω (refl ,ωω (refl ,ω refl)))
---         ,ωω _
---         ,ωω (refl ,ω refl)
---         ,ωω refl
---         ,ωω _
---         ,ω  _
---         ,ωω refl
---         ,ωω (`σ Type (λ t →
---              `σ Type (λ u →
---              `X [] (t ‵→ u)
---              (`X [] t (`▪ u)))))
---         ,ωω (λ _ → refl)
---         ,ωω _
---         ,ω _
---         ,ωω refl
---         ,ωω ((`σ Type λ t →
---               `σ Type (λ u →
---               `X (t ∷ []) u
---               (`▪ (t ‵→ u))))
---         ,ωω (λ _ → refl) ,ωω (lift tt))
-
 private
   th^Var : Var i Γ → (Γ -Env) Var Δ → Var i Δ
   th^Var V e = lookup e V
@@ -266,12 +199,6 @@ toSyntax {Ds = ._ ∷ Ds}
          {Syᶜ = (_ ,ω _ ,ωω _ ,ωω refl ,ωω _) ,ωω Syᶜˢ} inj
          (inr ⟦Ds'⟧) = inr (toSyntax inj ⟦Ds'⟧)
 
---Renaming : Semantics (findDataD (quote Lam)) SyntaxLam Var Lam
---Renaming = record { thⱽ = th^Var
---                  ; alg = λ { (inl x) → ‵var x
---                            ; (inr (inl (Γ' , σ' , τ' , E₁ , E₂ , refl))) → ‵app E₁ E₂
---                            ; (inr (inr (inl (Γ' , σ' , τ' , E , refl)))) → ‵lam (E weaken (pack (λ {z → z})))} }
-
 RenameT : ∀ {D N} (C : DataC D N) → (Sy : Syntaxᵈ Type D) → Setω
 RenameT {D} {N} C Sy@(_                               ,ωω
                       refl                            ,ωω
@@ -297,45 +224,44 @@ Renaming {D = D} {N} C
                       ; (inr ⟦Es⟧) → toN (inr (toSyntax id ⟦Es⟧)) }}
   where open DataC C
 
-RenameLamSem : Semantics (findDataD (quote Lam)) SyntaxLam Var Lam
-RenameLamSem = Renaming (findDataC (quote Lam)) SyntaxLam
-
-RenameP = SemP (findDataC (quote Lam)) SyntaxLam RenameLamSem
+-- RenameLamSem : Semantics (findDataD (quote Lam)) SyntaxLam Var Lam
+-- RenameLamSem = Renaming (findDataC (quote Lam)) SyntaxLam
+-- 
+-- RenameP = SemP (findDataC (quote Lam)) SyntaxLam RenameLamSem
 
 --unquoteDecl rename = defineFold RenameP rename
 
 --RenameC = genFoldC RenameP rename
 --
---SubstT : ∀ {D N} (C : DataC D N) → (Sy : Syntaxᵈ Type D) → Setω
---SubstT {D} {N} C Sy@(refl
---                 ,ω  _
---                 ,ωω refl
---                 ,ωω (refl ,ω refl ,ωω refl ,ω refl)
---                 ,ωω _) = ∀ {rename}
---                        → FoldC (SemP C Sy (Renaming C Sy)) rename
---                        → Semantics D Sy curriedN curriedN
---  where curryN : ∀ {I : Set ℓ} → (Indexˢ I → Set ℓ) → I -Scoped
---        curryN ind = λ i Γ → ind (i , Γ , tt)
---        curriedN = curryN (N tt tt)
---
---Subst : ∀ {D N}
---      → (C : DataC D N)
---      → (Sy : Syntaxᵈ Type D)
---      → SubstT C Sy
---Subst {D = D} {N} C
---      (refl                            ,ω
---       PD                              ,ωω
---       refl                            ,ωω
---       (refl ,ω refl ,ωω refl ,ω refl) ,ωω
---       (_ ,ω _ ,ω E ,ωω Es)            ,ωω
---       (refl ,ω refl)                  ,ωω
---       refl                            ,ωω
---       Syᶜ) {rename} renameC = record
---         { thⱽ = λ t th → rename tt tt t _ th
---         ; alg = λ { (inl x)    → x
---                   ; (inr ⟦Es⟧) → toN (inr (toSyntax (λ v → toN (inl (_ , _ , v , refl))) ⟦Es⟧)) }}
---  where open DataC C
---
+SubstT : ∀ {D N} (C : DataC D N) → (Sy : Syntaxᵈ Type D) → Setω
+SubstT {D} {N} C Sy@(_
+                 ,ωω refl
+                 ,ωω (refl ,ωω refl)
+                 ,ωω (_ ,ω _ ,ω _ ,ωω _)
+                 ,ωω refl
+                 ,ωω refl
+                 ,ωω Syᶜˢ) = ∀ {rename}
+                             → FoldC (SemP C Sy (Renaming C Sy)) rename
+                             → Semantics D Sy curriedN curriedN
+  where curryN : ∀ {I : Set ℓ} → (Indexˢ I → Set ℓ) → I -Scoped
+        curryN ind = λ i Γ → ind (i , Γ , tt)
+        curriedN = curryN (N tt tt)
+Subst : ∀ {D N}
+      → (C : DataC D N)
+      → (Sy : Syntaxᵈ Type D)
+      → SubstT C Sy
+Subst {D = D} {N} C Sy@(_
+                    ,ωω refl
+                    ,ωω (refl ,ωω refl)
+                    ,ωω (_ ,ω _ ,ω _ ,ωω _)
+                    ,ωω refl
+                    ,ωω refl
+                    ,ωω Syᶜˢ) {rename} renameC = record
+  { thⱽ = λ t th → rename tt tt t _ th
+  ; alg = λ { (inl x)    → x
+            ; (inr ⟦Es⟧) → toN (inr (toSyntax (λ v → toN (inl (_ , _ , v , refl))) ⟦Es⟧)) }}
+  where open DataC C
+
 --SubstLamSem : Semantics (findDataD (quote Lam)) SyntaxLam Lam Lam
 --SubstLamSem = Subst (findDataC (quote Lam)) SyntaxLam RenameC
 --
@@ -344,27 +270,3 @@ RenameP = SemP (findDataC (quote Lam)) SyntaxLam RenameLamSem
 --unquoteDecl sub = defineFold SubstP sub
 --
 --SubstC = genFoldC SubstP sub
---
---testTerm : Lam α (α ∷ (α ‵→ α) ∷ [])
---testTerm = ‵app (‵var (s z))
---                (‵app (‵lam (‵var (s z)))
---                      (‵app (‵lam (‵var z))
---                            (‵var z)))
---
---testSub : ((α ∷ (α ‵→ α) ∷ []) -Env) Lam (α ∷ (α ‵→ α) ∷ (α ‵→ (α ‵→ α)) ∷ [])
---lookup testSub    z  = ‵app (‵var (s z))
---                            (‵var z)
---lookup testSub (s z) = ‵app (‵var (s (s z)))
---                            (‵var z)
---
---test : Lam α (α ∷ (α ‵→ α) ∷ (α ‵→ (α ‵→ α)) ∷ [])
---test = sub testTerm _ testSub
---
---testEq : test ≡ ‵app (‵app (‵var (s (s z)))
---                           (‵var z))
---                     (‵app (‵lam (‵app (‵var (s (s z)))
---                                       (‵var (s z))))
---                           (‵app (‵lam (‵var z))
---                                 (‵app (‵var (s z))
---                                       (‵var z))))
---testEq = refl

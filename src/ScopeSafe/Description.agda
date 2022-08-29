@@ -7,12 +7,11 @@ open import Generics.Telescope   as T
 open import Generics.Reflection
 open import Generics.Recursion
 open import Generics.RecursionScheme
---open import Utils.Reflection hiding (Type)
 
 private variable
   A B S I : Set ℓ
   Γ Δ Θ : List I
-  i : I
+  σ i : I
   cb : D.ConB
 
 infixr 10 _⇒_
@@ -41,50 +40,8 @@ weakenVarR : Var i Γ → Var i (Γ <> Δ)
 weakenVarR z = z
 weakenVarR (s V) = s (weakenVarR V)
 
-data Type : Set where
-  α    : Type
-  `ℕ    : Type
-  _‵→_ : Type → Type → Type
-
 private variable
-  σ τ : Type
   W V C : I -Scoped
-
-data Lam : Type → List Type → Set where
-  ‵var : Var σ Γ        → Lam σ Γ
-  ‵app : ∀ {Γ σ τ} → Lam (σ ‵→ τ) Γ → Lam σ Γ → Lam τ Γ
-  ‵lam : ∀ {Γ σ τ} → Lam τ (σ ∷ Γ)  → Lam (σ ‵→ τ) Γ
-
---Indexˢ : Set ℓ → Set ℓ
---Indexˢ Ty = Ty × List Ty × ⊤
---
---data Desc' (I : Set ℓ) : D.ConB → Setω where
---  `σ : (A : Set ℓ) → (A → Desc' I cb) → Desc' I (inl ℓ ∷ cb)
---  `X : List I → I → Desc' I cb → Desc' I (inr [] ∷ cb)
---  `▪ : I → Desc' I []
---
---fromDesc' : (Desc' I cb) → List I → D.ConD (Indexˢ I) cb
---fromDesc' (`σ A D')   Δ = D.σ A λ a → fromDesc' (D' a) Δ
---fromDesc' (`X Γ i D') Δ = D.ρ (D.ι (i , Γ <> Δ , tt)) (fromDesc' D' Δ)
---fromDesc' (`▪ i)      Δ = D.ι (i , Δ , tt)
---
---⟦_⟧ : Desc' I cb → (List I → I -Scoped) → I -Scoped
---⟦ `σ A d   ⟧ X i Γ =  Σ[ a ∈ A ] ⟦ d a ⟧ X i Γ
---⟦ `X Δ j d ⟧ X i Γ = X Δ j Γ × ⟦ d ⟧ X i Γ
---⟦ `▪ j     ⟧ X i Γ = i ≡ j
-
-instance
-  LamC : Named (quote Lam) _
-  unNamed LamC = genDataC LamD (genDataT LamD Lam)
-    where LamD = genDataD Lam
-
-foldLamP : FoldP
-foldLamP = fold-operator (quote Lam)
-
---foldrT : FoldT foldLamP
---foldrT ps (tt , T , v , a , l , tt ) = foldr {!v!} {!!} {!!}
-
-unquoteDecl foldLam = defineFold foldLamP foldLam
 
 record _-Env {I : Set ℓ} (Γ : List I) (V : I -Scoped) (Δ : List I) : Set ℓ where
   constructor pack
@@ -107,41 +64,6 @@ lookup (_Env++_ {Γ = []}    ρ v) k = lookup v k
 lookup (_Env++_ {Γ = x ∷ Γ} ρ v) z = lookup ρ z
 lookup (_Env++_ {Γ = x ∷ Γ} ρ v) (s k) = lookup (pack (λ x → lookup ρ (s x)) Env++ v) k
 
---record Semantics (V C : Type -Scoped) : Setω where
---  field
---    thⱽ : V σ Γ → (Γ -Env) Var Δ → (V σ) Δ
---    var : V σ Γ → C σ Γ
---    app : C (σ ‵→ τ) Γ → C σ Γ → C τ Γ
---    lam : (∀ {Δ} → ((Γ -Env) Var Δ) → V σ Δ → C τ Δ) → C (σ ‵→ τ) Γ
---  extend : (Δ -Env) Var Θ → (Γ -Env) V Δ → V σ Θ → ((σ ∷ Γ) -Env) V Θ
---  extend σ ρ v = bifmap (λ t → thⱽ t σ) ρ • v
---
---  SemP : Semantics V C → FoldP
---SemP {V} {C} S = record
---              { Conv = unNamed LamC
---              ; #levels = 0
---              ; level = λ {tt → tt}
---              ; Param = λ {tt → []}
---              ; ParamV = []
---              ; ParamN = []
---              ; param = λ _ → tt
---              ; Carrier = λ { tt tt (σ' , Γ' , tt)
---                            → ∀ Δ → (Γ' -Env) V Δ → C σ' Δ}
---              ; algebra = λ { tt (inl (σ , Γ , k , refl)) → λ _ ρ → var (lookup ρ k)
---                            ; ps (inr (inl (σ , τ , Γ , C₁ , C₂ , refl))) → λ _ ρ → app (C₁ _ ρ) (C₂ _ ρ)
---                            ; ps (inr (inr (inl (fst₁ , fst₂ , fst₃ , C₁ , refl)))) → λ _ ρ → lam (λ σ v → C₁ _ (extend σ ρ v))}
---              }
---  where open Semantics S
---
---Renaming : Semantics Var Lam
---Renaming = record { thⱽ = λ x ρ → lookup ρ x
---                  ; var = ‵var
---                  ; app = ‵app
---                  ; lam = λ b → ‵lam (b weaken z)
---                  }
---
---unquoteDecl rename = defineFold (SemP Renaming) rename
---
 --Subst : Semantics Lam Lam
 --Subst = record { thⱽ = λ t ρ → rename t _ ρ
 --               ; var = id
