@@ -69,33 +69,11 @@ lookup (_Env++_ {Γ = x ∷ Γ} ρ v) (s k) = lookup (pack (λ x → lookup ρ (
 --               ; var = id
 --               ; app = ‵app
 --               ; lam = λ b → ‵lam (b weaken (‵var z)) }
---
-----unquoteDecl substitute = defineFold (SemP Subst) substitute
---
+
 --substitute : {a : Type} {a1 : List Type} (l : Lam a a1) {Δ : List Type} (_ : (a1 -Env) Lam Δ) → Lam a Δ
 --substitute (‵var x) = λ ρ → lookup ρ x
 --substitute (‵app {σ} x x₁) = λ ρ → ‵app (substitute x ρ) (substitute x₁ ρ)
 --substitute (‵lam x) = λ ρ → ‵lam (substitute x (bifmap (λ {i} t → rename t _ weaken) ρ • ‵var z))
---
---SubstT : FoldT (SemP Subst)
---SubstT tt tt L Δ = substitute L
---
---substC = genFoldC' (SemP Subst) SubstT
-
-
---id₂ : {A : Set} → A → A
---id₂ = λ x → x -- error
-
---semantics : Semantics V C → (Γ -Env) V Δ → (Lam σ Γ → C σ Δ)
-
---Fold on Lam
---foldLam : ∀[ V σ ⇒ C σ ]
---        → ∀[ C (σ ‵→ τ) ⇒ C σ ⇒ C τ ]
---        → ∀[ (σ ∷_) ⊢ C τ ⇒ C (σ ‵→ τ) ]
---        → ∀[ Lam σ ⇒ C τ ]
---foldLam v a l (‵var x) = {!!}
---foldLam v a l (‵app L L₁) = {!!}
---foldLam v a l (‵lam x) = {!!}
 
 {-- Debug
 printLam : TC _

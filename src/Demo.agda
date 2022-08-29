@@ -56,6 +56,10 @@ RenameSTLCC = genFoldC RenameSTLC renameSTLC
 SubstSTLCSem : Semantics (findDataD (quote STLC)) SyntaxSTLC STLC STLC
 SubstSTLCSem = Subst (findDataC (quote STLC)) SyntaxSTLC RenameSTLCC
 
+SubstP = SemP (findDataC (quote STLC)) SyntaxSTLC SubstSTLCSem
+
+unquoteDecl subSTLC = defineFold SubstP subSTLC
+
 data PCF : Type → List Type → Set where
   ‵var : Var σ Γ   → PCF σ Γ
   ‵app : ∀ {Γ σ τ} → PCF (σ ‵→ τ) Γ → PCF σ Γ → PCF τ Γ
